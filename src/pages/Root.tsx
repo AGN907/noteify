@@ -9,7 +9,7 @@ export default function Root() {
         <SidebarMenu />
       </div>
       <div className="fixed bottom-0 left-52 top-0">
-        <div className="h-full w-80 space-y-4 overflow-scroll border border-l-accent p-4">
+        <div className="h-full w-80 space-y-4 overflow-scroll border border-l-accent">
           <Outlet />
         </div>
       </div>
