@@ -1,11 +1,14 @@
+import { cn } from "@/lib/utils";
 import {
   PiFolderNotch,
+  PiGear,
   PiHash,
   PiNote,
   PiStar,
   PiTrashSimple,
 } from "react-icons/pi";
-import { NavLink } from "react-router-dom";
+import { NavLink, NavLinkProps } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
 const sidebarItems = [
   {
@@ -37,36 +40,50 @@ const sidebarItems = [
 export default function SidebarMenu() {
   return (
     <div className="fixed bottom-0 left-0 top-0 h-screen w-52">
-      <div className="h-full w-full border border-r-accent">
+      <div className="flex h-full w-full flex-col border border-r-accent">
         <nav>
           {sidebarItems.map(({ name, path, Icon }) => (
-            <SidebarItem key={name} name={name} path={path} icon={Icon} />
+            <SidebarItem key={name} name={name} to={path} icon={Icon} />
           ))}
         </nav>
+        <div className="mt-auto flex items-center transition-colors hover:bg-accent/50">
+          <SidebarItem
+            className="hover:bg-transparent"
+            name="Settings"
+            to="/settings"
+            icon={<PiGear size={22} />}
+          />
+          <hr className="h-8 w-0.5 bg-accent" />
+          <div className="ml-auto">
+            <ThemeToggle />
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-interface SidebarItemProps {
+interface SidebarItemProps extends NavLinkProps {
   name: string;
-  path: string;
   icon: JSX.Element;
 }
 export function SidebarItem(props: SidebarItemProps) {
-  const { name, path, icon } = props;
+  const { name, icon, className, ...restProps } = props;
 
   return (
     <NavLink
-      to={path}
+      {...restProps}
       className={({ isActive }) => {
-        return `${
-          isActive
-            ? "bg-accent text-accent-foreground"
-            : "text-muted-foreground"
-        }
-          flex items-center gap-x-4 p-2 py-3 hover:bg-accent/50
-          `;
+        return cn(
+          `${
+            isActive
+              ? "bg-accent text-accent-foreground"
+              : "text-muted-foreground"
+          }
+          flex w-full items-center gap-x-4 p-2 py-3 hover:bg-accent/50
+          `,
+          className,
+        );
       }}
     >
       {icon}
