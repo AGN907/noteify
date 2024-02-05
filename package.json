@@ -24,6 +24,7 @@
     "@tiptap/starter-kit": "^2.2.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "dayjs": "^1.11.10",
     "immer": "^10.0.3",
     "localforage": "^1.10.0",
     "lucide-react": "^0.321.0",
