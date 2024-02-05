@@ -24,6 +24,7 @@
     "@tiptap/starter-kit": "^2.2.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "immer": "^10.0.3",
     "localforage": "^1.10.0",
     "lucide-react": "^0.321.0",
     "next-themes": "^0.2.1",
@@ -36,6 +37,7 @@
     "sonner": "^1.4.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "uuid": "^9.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -43,6 +45,7 @@
     "@types/node": "^20.11.16",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react": "^4.2.1",
