@@ -96,6 +96,9 @@ export const notesSlice = createSlice({
       if (note) {
         note.type = "trash";
       }
+      if (state.selectedNoteId === action.payload) {
+        state.selectedNoteId = null;
+      }
     },
     previewNote: (state, action: PayloadAction<string>) => {
       const note = state.notes.get(action.payload);
@@ -112,6 +115,9 @@ export const notesSlice = createSlice({
     },
     permaDeleteNote: (state, action: PayloadAction<string>) => {
       state.notes.delete(action.payload);
+      if (state.selectedNoteId === action.payload) {
+        state.selectedNoteId = null;
+      }
     },
   },
 });
