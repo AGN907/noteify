@@ -1,3 +1,5 @@
+import { Content } from "@tiptap/react";
+
 export type Item<T = {}> = {
   id: string;
   type: string;
@@ -11,8 +13,9 @@ type ItemKeys<T> = {
 
 export type Note = {
   title: string;
-  content: string;
+  content: Content;
   isPinned: boolean;
+  readonly: boolean;
   isFavorite: boolean;
   tags?: Item<Tag>[];
 };
