@@ -1,10 +1,25 @@
 import type { Item, Note } from "@/components/ListItem/types";
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  Dispatch,
+  ThunkDispatch,
+  UnknownAction,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import type { Content } from "@tiptap/react";
 import { enableMapSet } from "immer";
 import { v4 as uuid } from "uuid";
 
 enableMapSet();
+
+export type NotesDispatch = ThunkDispatch<
+  {
+    notes: initialState;
+  },
+  undefined,
+  UnknownAction
+> &
+  Dispatch<UnknownAction>;
 
 export type initialState = {
   notes: Map<string, Item<Note>>;

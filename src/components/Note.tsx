@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import type { initialState } from "@/redux/notes/notesSlice";
+import type { NotesDispatch } from "@/redux/notes/notesSlice";
 import {
   duplicateNote,
   favouriteNote,
@@ -8,7 +8,6 @@ import {
   previewNote,
   selectNote,
 } from "@/redux/notes/notesSlice";
-import type { Dispatch, ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
 import {
   PiCopy,
   PiPencilSlash,
@@ -57,14 +56,7 @@ export default function Note(props: NoteProps) {
 
 const menuItems = (
   item: Item<Note>,
-  dispatch: ThunkDispatch<
-    {
-      notes: initialState;
-    },
-    undefined,
-    UnknownAction
-  > &
-    Dispatch<UnknownAction>,
+  dispatch: NotesDispatch,
 ): Array<MenuItem | MenuItem[]> => [
   [
     {
