@@ -27,8 +27,8 @@ export const notesSlice = createSlice({
       state.notes.set(id, {
         id,
         type: "note",
-        title: `#Note ${currentTimestamp}`,
-        content: `#Note ${new Date(currentTimestamp).toLocaleString()}`,
+        title: `New Note`,
+        content: `<h1>New Note</h1>`,
         isPinned: false,
         isFavorite: false,
         createdAt: currentTimestamp,
