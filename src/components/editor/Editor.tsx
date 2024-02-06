@@ -1,35 +1,41 @@
-import { useAppSelector } from "@/app/hooks";
 import { cn } from "@/lib/utils";
-import { EditorContent, useEditor, type Content } from "@tiptap/react";
+import {
+  EditorContent,
+  generateText,
+  useEditor,
+  type JSONContent,
+} from "@tiptap/react";
+import { Item, Note } from "../ListItem/types";
 import EditorToolbar, { extensions } from "./EditorToolbar";
 
 interface EditorProps {
-  content: Content;
-  editable: boolean;
+  note: Item<Note>;
   onChange: ({
     title,
     content,
   }: {
     title: string | undefined;
-    content: Content;
+    content: JSONContent;
   }) => void;
 }
 
 export default function Editor(props: EditorProps) {
-  const { content, editable, onChange } = props;
-  const { selectedNoteId } = useAppSelector((state) => state.notes);
+  const { note, onChange } = props;
+
+  const editable = !note.readonly;
 
   const editor = useEditor(
     {
       extensions,
-      content,
+      content: note.content,
       editable,
 
       onUpdate: ({ editor }) => {
-        const title = editor.getJSON()?.content?.[0].content?.[0].text;
+        const editorContent = editor.getJSON();
+        const title = editorContent.content?.[0];
 
         onChange({
-          title,
+          title: title && generateText(title, extensions),
           content: editor.getJSON(),
         });
       },
@@ -37,12 +43,12 @@ export default function Editor(props: EditorProps) {
         attributes: {
           class: cn(
             "prose prose-sm fixed left-52 min-h-screen w-full p-2 dark:prose-invert sm:prose lg:prose-lg xl:prose-lg focus:outline-none",
-            editable ? "top-20" : "top-0",
+            editable ? "top-20" : "top-8",
           ),
         },
       },
     },
-    [selectedNoteId, editable],
+    [note.id, editable],
   );
 
   return (
