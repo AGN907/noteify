@@ -28,7 +28,7 @@ function Notes() {
       </div>
       <div>
         {notesArray.length === 0 && (
-          <div className="flex items-center space-x-2 px-4 pt-32">
+          <div className="flex items-center justify-center space-x-2 px-4 pt-32">
             <p>
               No notes yet. Click the{" "}
               <PiPlusCircleFill className="inline" size={20} /> button to create
