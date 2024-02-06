@@ -1,6 +1,24 @@
-import { PiCopy, PiPushPinSimple, PiStar, PiTrashSimple } from "react-icons/pi";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import type { initialState } from "@/redux/notes/notesSlice";
+import {
+  duplicateNote,
+  favouriteNote,
+  moveNoteToTrash,
+  pinNote,
+  previewNote,
+  selectNote,
+} from "@/redux/notes/notesSlice";
+import type { Dispatch, ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
+import {
+  PiCopy,
+  PiPencilSlash,
+  PiPushPinSimple,
+  PiStar,
+  PiTrashSimple,
+} from "react-icons/pi";
 import ListItem from "./ListItem";
 import type { Item, MenuItem, Note } from "./ListItem/types";
+import { TimeAgo } from "./shared/TimeAgo";
 
 interface NoteProps {
   note: Item<Note>;
@@ -9,19 +27,16 @@ interface NoteProps {
 export default function Note(props: NoteProps) {
   const { note } = props;
 
+  const { selectedNoteId } = useAppSelector((state) => state.notes);
+  const dispatch = useAppDispatch();
+
+  const isSelected = note.id === selectedNoteId;
+
   return (
     <ListItem
       item={note}
       title={note.title}
-      body={
-        <div>
-          <p>
-            {note.content.length > 50
-              ? note.content.slice(0, 50) + "..."
-              : note.content}
-          </p>
-        </div>
-      }
+      body={<div></div>}
       footer={
         <div className="flex items-center justify-between pt-4">
           <div className="flex gap-2">
@@ -29,46 +44,64 @@ export default function Note(props: NoteProps) {
             {note.isFavorite && <PiStar size={14} />}
           </div>
           <div>
-            <time className="text-xs">
-              {new Date(note.updatedAt).toLocaleTimeString()}
-            </time>
+            <TimeAgo timestamp={note.updatedAt} />
           </div>
         </div>
       }
-      onItemClick={() => {}}
-      isSelected={false}
-      contextMenuItems={() => menuItems(note)}
+      onItemClick={() => dispatch(selectNote(note.id))}
+      isSelected={isSelected}
+      contextMenuItems={() => menuItems(note, dispatch)}
     />
   );
 }
 
-const menuItems = (item: Item<Note>): Array<MenuItem | MenuItem[]> => [
+const menuItems = (
+  item: Item<Note>,
+  dispatch: ThunkDispatch<
+    {
+      notes: initialState;
+    },
+    undefined,
+    UnknownAction
+  > &
+    Dispatch<UnknownAction>,
+): Array<MenuItem | MenuItem[]> => [
   [
     {
       name: "Pin",
       key: "pin",
-      onClick: () => {},
+      onClick: () => dispatch(pinNote(item.id)),
       Icon: <PiPushPinSimple size={18} />,
       isChecked: item.isPinned,
     },
     {
       name: "Favorite",
       key: "favorite",
-      onClick() {},
+      onClick: () => dispatch(favouriteNote(item.id)),
       Icon: <PiStar size={18} />,
       isChecked: item.isFavorite,
     },
     {
+      name: "Readonly",
+      key: "readonly",
+      onClick: () => dispatch(previewNote(item.id)),
+      Icon: <PiPencilSlash size={18} />,
+      isChecked: item.readonly,
+    },
+  ],
+
+  [
+    {
       name: "Duplicate",
       key: "duplicate",
-      onClick() {},
+      onClick: () => dispatch(duplicateNote(item.id)),
       Icon: <PiCopy size={18} />,
     },
   ],
   {
     name: "Move to trash",
     key: "trash",
-    onClick() {},
+    onClick: () => dispatch(moveNoteToTrash(item.id)),
     Icon: <PiTrashSimple size={18} />,
     danger: true,
   },
