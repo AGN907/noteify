@@ -101,6 +101,7 @@ export const notesSlice = createSlice({
           ...note,
           id,
           title: `Copy of ${note.title}`,
+          content: `Copy of ${note.content}`,
           createdAt: currentTimestamp,
           updatedAt: currentTimestamp,
         });
@@ -110,6 +111,7 @@ export const notesSlice = createSlice({
       const note = state.notes.get(action.payload);
       if (note) {
         note.type = "trash";
+        note.readonly = true;
       }
       if (state.selectedNoteId === action.payload) {
         state.selectedNoteId = null;
@@ -126,6 +128,7 @@ export const notesSlice = createSlice({
       const note = state.notes.get(action.payload);
       if (note && note.type === "trash") {
         note.type = "note";
+        note.readonly = false;
       }
     },
     permaDeleteNote: (state, action: PayloadAction<string>) => {
