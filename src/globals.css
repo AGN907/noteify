@@ -66,13 +66,6 @@
   }
 }
 
-.tiptap.ProseMirror > p:first-child {
-  margin-top: 4px;
-  margin-bottom: 4px;
-  font-size: 1.7em;
-  font-weight: 700;
-
-}
  
 @layer base {
   * {
