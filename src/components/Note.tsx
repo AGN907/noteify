@@ -41,7 +41,7 @@ export default function Note(props: NoteProps) {
         <div className="flex items-center justify-between pt-4">
           <div className="flex gap-2">
             {note.isPinned && <PiPushPinSimple size={14} />}
-            {note.isFavorite && <PiStar size={14} />}
+            {note.isFavourite && <PiStar size={14} />}
           </div>
           <div>
             <TimeAgo timestamp={note.updatedAt} />
@@ -79,7 +79,7 @@ const menuItems = (
       key: "favorite",
       onClick: () => dispatch(favouriteNote(item.id)),
       Icon: <PiStar size={18} />,
-      isChecked: item.isFavorite,
+      isChecked: item.isFavourite,
     },
     {
       name: "Readonly",

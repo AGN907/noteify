@@ -16,7 +16,7 @@ export type Note = {
   content: Content;
   isPinned: boolean;
   readonly: boolean;
-  isFavorite: boolean;
+  isFavourite: boolean;
   tags?: Item<Tag>[];
 };
 

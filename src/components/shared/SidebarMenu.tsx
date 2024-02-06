@@ -17,8 +17,8 @@ const sidebarItems = [
     Icon: <PiNote size={22} />,
   },
   {
-    name: "Favorites",
-    path: "/favorites",
+    name: "Favourites",
+    path: "/favourites",
     Icon: <PiStar size={22} />,
   },
   {

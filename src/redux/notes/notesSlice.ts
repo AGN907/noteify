@@ -30,7 +30,7 @@ export const notesSlice = createSlice({
         title: `New Note`,
         content: `<h1>New Note</h1>`,
         isPinned: false,
-        isFavorite: false,
+        isFavourite: false,
         createdAt: currentTimestamp,
         updatedAt: currentTimestamp,
         readonly: false,
@@ -71,7 +71,7 @@ export const notesSlice = createSlice({
       const note = state.notes.get(action.payload);
 
       if (note) {
-        note.isFavorite = !note.isFavorite;
+        note.isFavourite = !note.isFavourite;
         note.updatedAt = Date.now();
       }
     },
