@@ -1,4 +1,5 @@
 import { useAppSelector } from "@/app/hooks";
+import { cn } from "@/lib/utils";
 import { EditorContent, useEditor, type Content } from "@tiptap/react";
 import EditorToolbar, { extensions } from "./EditorToolbar";
 
@@ -34,8 +35,10 @@ export default function Editor(props: EditorProps) {
       },
       editorProps: {
         attributes: {
-          class:
-            "prose prose-sm fixed left-52 top-20 min-h-screen w-full p-2 dark:prose-invert sm:prose lg:prose-lg xl:prose-lg focus:outline-none",
+          class: cn(
+            "prose prose-sm fixed left-52 min-h-screen w-full p-2 dark:prose-invert sm:prose lg:prose-lg xl:prose-lg focus:outline-none",
+            editable ? "top-20" : "top-0",
+          ),
         },
       },
     },
