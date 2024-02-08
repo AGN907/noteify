@@ -2,15 +2,18 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import Editor from "@/components/editor/Editor";
 import SidebarMenu from "@/components/shared/SidebarMenu";
 import { debounce } from "@/lib/utils";
-import { updateNote } from "@/redux/notes/notesSlice";
+import { loadNotes, updateNote } from "@/redux/notes/notesSlice";
 import type { JSONContent } from "@tiptap/react";
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 export default function Root() {
-  const { notes, selectedNoteId } = useAppSelector((state) => state.notes);
   const dispatch = useAppDispatch();
+  const { selectedNoteId, notes, isNotesLoading } = useAppSelector(
+    (state) => state.notes,
+  );
 
-  const selectedNote = notes.get(selectedNoteId ?? "");
+  const selectedNote = notes[selectedNoteId ?? ""];
 
   const debouncedUpdateNote = debounce(
     ({
@@ -22,6 +25,23 @@ export default function Root() {
     }) => dispatch(updateNote({ title, content })),
     700,
   );
+
+  useEffect(() => {
+    dispatch(loadNotes());
+  }, []);
+
+  if (isNotesLoading) {
+    return (
+      <div className="flex h-full items-center justify-center pt-32">
+        <div className="flex flex-col items-center justify-center">
+          <div className="flex items-center space-x-2">
+            <span className="text-4xl">📝</span>
+            <p className="text-xl">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -1,13 +1,37 @@
+import { startAppListening } from "@/app/middleware";
 import type { Item, Note } from "@/components/ListItem/types";
+import storage from "@/lib/db";
 import {
   Dispatch,
   ThunkDispatch,
   UnknownAction,
+  createAsyncThunk,
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import type { Content } from "@tiptap/react";
 import { v4 as uuid } from "uuid";
+
+startAppListening({
+  predicate: (action) => {
+    if (action.type === "notes/loadNotes.fulfilled") {
+      return false;
+    }
+
+    if (action.type.startsWith("notes/")) {
+      return true;
+    }
+
+    return false;
+  },
+  effect: async (_, api) => {
+    const notesState: Record<string, Item<Note>> = api.getState().notes.notes;
+    storage.db.set("notes", Object.keys(notesState));
+
+    const notes = Object.values(notesState);
+    await Promise.all(notes.map((note) => storage.db.set(note.id, note)));
+  },
+});
 
 export type NotesDispatch = ThunkDispatch<
   {
@@ -29,6 +53,23 @@ const initialState: initialState = {
   selectedNoteId: null,
   isNotesLoading: true,
 };
+
+export const loadNotes = createAsyncThunk("notes/loadNotes", async () => {
+  const notesIds = (await storage.db.get<string[]>("notes")) ?? [];
+  const notes = await Promise.all(
+    notesIds.map((id) => storage.db.get<Item<Note>>(id)),
+  );
+
+  return notes.reduce(
+    (acc, note) => {
+      if (note) {
+        acc[note.id] = note;
+      }
+      return acc;
+    },
+    {} as Record<string, Item<Note>>,
+  );
+});
 
 export const notesSlice = createSlice({
   name: "notes",
@@ -133,6 +174,12 @@ export const notesSlice = createSlice({
         state.selectedNoteId = null;
       }
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(loadNotes.fulfilled, (state, action) => {
+      state.notes = action.payload;
+      state.isNotesLoading = false;
+    });
   },
 });
 
