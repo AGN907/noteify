@@ -1,8 +1,6 @@
-import { Item } from "../ListItem/types";
-
 interface ListItemContainerProps<T> {
-  items: Item<T>[];
-  renderItem: (item: Item<T>) => JSX.Element;
+  items: T[];
+  renderItem: (item: T) => JSX.Element;
 }
 
 export default function ListItemContainer<T>(props: ListItemContainerProps<T>) {
