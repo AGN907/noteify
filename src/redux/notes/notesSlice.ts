@@ -10,6 +10,7 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import type { Content } from "@tiptap/react";
+import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 
 startAppListening({
@@ -91,6 +92,8 @@ export const notesSlice = createSlice({
 
       state.notes[note.id] = note;
 
+      toast.success("Note was created successfully");
+
       state.selectedNoteId = note.id;
     },
     updateNote: (
@@ -119,6 +122,12 @@ export const notesSlice = createSlice({
 
       if (note) {
         note.isPinned = !note.isPinned;
+
+        if (note.isPinned) {
+          toast.success("Note was pinned successfully");
+        } else {
+          toast("Note was unpinned");
+        }
       }
     },
 
@@ -127,6 +136,12 @@ export const notesSlice = createSlice({
 
       if (note) {
         note.isFavourite = !note.isFavourite;
+
+        if (note.isFavourite) {
+          toast.success("Note was added to favourites");
+        } else {
+          toast("Note was removed from favourites");
+        }
       }
     },
     duplicateNote: (state, action: PayloadAction<string>) => {
@@ -144,6 +159,8 @@ export const notesSlice = createSlice({
           createdAt: currentTimestamp,
           updatedAt: currentTimestamp,
         };
+
+        toast.success("Note was duplicated successfully");
       }
     },
     moveNoteToTrash: (state, action: PayloadAction<string>) => {
@@ -169,6 +186,8 @@ export const notesSlice = createSlice({
         note.type = "note";
         note.readonly = false;
         note.deletedAt = 0;
+
+        toast.success("Note was restored from trash");
       }
     },
     permaDeleteNote: (state, action: PayloadAction<string>) => {
