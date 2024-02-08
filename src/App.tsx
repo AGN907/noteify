@@ -1,8 +1,8 @@
-import { Provider as StoreProvider } from 'react-redux'
-import { RouterProvider } from "react-router-dom"
-import store from "./app/store"
-import { router } from "./pages"
-import { ThemeProvider } from "./providers/ThemeProvider"
+import { Provider as StoreProvider } from "react-redux";
+import { RouterProvider } from "react-router-dom";
+import store from "./app/store";
+import { router } from "./pages";
+import { ThemeProvider } from "./providers/ThemeProvider";
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <RouterProvider router={router} />
       </ThemeProvider>
     </StoreProvider>
-  )
+  );
 }
 
-export default App
+export default App;
