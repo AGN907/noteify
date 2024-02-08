@@ -6,7 +6,7 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import type { Item, MenuItem } from "./types";
 
 interface ListItemProps {
@@ -31,7 +31,7 @@ export default function ListItem(props: ListItemProps) {
   } = props;
 
   return (
-    <ContextMenu>
+    <ContextMenu key={item.id}>
       <ContextMenuTrigger>
         <li
           onClick={() => onItemClick(item.id)}
@@ -86,16 +86,16 @@ const renderContextMenu = (menuItems: () => Array<MenuItem | MenuItem[]>) => {
 
   return (
     <ContextMenuContent>
-      {menuItems().map((menuItem) => (
-        <>
+      {menuItems().map((menuItem, index) => (
+        <Fragment key={index}>
           {Array.isArray(menuItem) ? (
             <>
               {menuItem.map((item) => (
-                <>
+                <Fragment key={item.key}>
                   {item.isChecked !== undefined
                     ? renderCheckboxItem(item)
                     : renderMenuItem(item)}
-                </>
+                </Fragment>
               ))}
               <ContextMenuSeparator />
             </>
@@ -104,7 +104,7 @@ const renderContextMenu = (menuItems: () => Array<MenuItem | MenuItem[]>) => {
           ) : (
             renderMenuItem(menuItem)
           )}
-        </>
+        </Fragment>
       ))}
     </ContextMenuContent>
   );
