@@ -82,6 +82,7 @@ export const notesSlice = createSlice({
         content: "<h1>New Note</h1>",
         createdAt: Date.now(),
         updatedAt: Date.now(),
+        deletedAt: 0,
         type: "note",
         isFavourite: false,
         isPinned: false,
@@ -150,6 +151,7 @@ export const notesSlice = createSlice({
       if (note) {
         note.type = "trash";
         note.readonly = true;
+        note.deletedAt = Date.now();
       }
       if (state.selectedNoteId === action.payload) {
         state.selectedNoteId = null;
@@ -166,6 +168,7 @@ export const notesSlice = createSlice({
       if (note && note.type === "trash") {
         note.type = "note";
         note.readonly = false;
+        note.deletedAt = 0;
       }
     },
     permaDeleteNote: (state, action: PayloadAction<string>) => {

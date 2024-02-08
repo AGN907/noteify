@@ -5,6 +5,7 @@ export type Item<T = {}> = {
   type: string;
   createdAt: number;
   updatedAt: number;
+  deletedAt: number;
 } & ItemKeys<T>;
 
 type ItemKeys<T> = {
