@@ -9,8 +9,8 @@ function Notes() {
   const { notes } = useAppSelector((state) => state.notes);
   const dispatch = useAppDispatch();
 
-  const notesArray = Array.from(notes.values()).filter(
-    (item) => item.type === "note",
+  const notesArray = Object.values(notes).filter(
+    (item) => item?.type === "note",
   );
 
   return (

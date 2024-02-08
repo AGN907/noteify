@@ -7,10 +7,7 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import type { Content } from "@tiptap/react";
-import { enableMapSet } from "immer";
 import { v4 as uuid } from "uuid";
-
-enableMapSet();
 
 export type NotesDispatch = ThunkDispatch<
   {
@@ -22,13 +19,15 @@ export type NotesDispatch = ThunkDispatch<
   Dispatch<UnknownAction>;
 
 export type initialState = {
-  notes: Map<string, Item<Note>>;
+  notes: Record<string, Item<Note>>;
   selectedNoteId: string | null;
+  isNotesLoading: boolean;
 };
 
 const initialState: initialState = {
-  notes: new Map(),
+  notes: {},
   selectedNoteId: null,
+  isNotesLoading: true,
 };
 
 export const notesSlice = createSlice({
@@ -36,23 +35,21 @@ export const notesSlice = createSlice({
   initialState,
   reducers: {
     createNote: (state) => {
-      const id = uuid();
-      const currentTimestamp = Date.now();
-
-      state.notes.set(id, {
-        id,
+      const note = {
+        id: uuid(),
+        title: "New Note",
+        content: "<h1>New Note</h1>",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
         type: "note",
-        title: `New Note`,
-        content: `<h1>New Note</h1>`,
-        isPinned: false,
         isFavourite: false,
-        createdAt: currentTimestamp,
-        updatedAt: currentTimestamp,
+        isPinned: false,
         readonly: false,
-        tags: [],
-      });
+      };
 
-      state.selectedNoteId = id;
+      state.notes[note.id] = note;
+
+      state.selectedNoteId = note.id;
     },
     updateNote: (
       state,
@@ -60,55 +57,55 @@ export const notesSlice = createSlice({
     ) => {
       if (!state.selectedNoteId) return;
 
-      const note = state.notes.get(state.selectedNoteId);
+      const note = state.notes[state.selectedNoteId];
 
       if (note) {
-        note.title = action.payload.title ?? note.title;
-        note.content = action.payload.content;
-        note.updatedAt = Date.now();
+        state.notes[note.id] = {
+          ...note,
+          title: action.payload.title,
+          content: action.payload.content,
+          updatedAt: Date.now(),
+        };
       }
     },
-
     selectNote: (state, action: PayloadAction<string>) => {
       state.selectedNoteId = action.payload;
     },
 
     pinNote: (state, action: PayloadAction<string>) => {
-      const note = state.notes.get(action.payload);
+      const note = state.notes[action.payload];
 
       if (note) {
         note.isPinned = !note.isPinned;
-        note.updatedAt = Date.now();
       }
     },
 
     favouriteNote: (state, action: PayloadAction<string>) => {
-      const note = state.notes.get(action.payload);
+      const note = state.notes[action.payload];
 
       if (note) {
         note.isFavourite = !note.isFavourite;
-        note.updatedAt = Date.now();
       }
     },
     duplicateNote: (state, action: PayloadAction<string>) => {
-      const note = state.notes.get(action.payload);
+      const note = state.notes[action.payload];
 
       const id = uuid();
       const currentTimestamp = Date.now();
 
       if (note) {
-        state.notes.set(id, {
+        state.notes[id] = {
           ...note,
           id,
           title: `Copy of ${note.title}`,
-          content: `Copy of ${note.content}`,
+          content: `${note.title}`,
           createdAt: currentTimestamp,
           updatedAt: currentTimestamp,
-        });
+        };
       }
     },
     moveNoteToTrash: (state, action: PayloadAction<string>) => {
-      const note = state.notes.get(action.payload);
+      const note = state.notes[action.payload];
       if (note) {
         note.type = "trash";
         note.readonly = true;
@@ -118,21 +115,20 @@ export const notesSlice = createSlice({
       }
     },
     previewNote: (state, action: PayloadAction<string>) => {
-      const note = state.notes.get(action.payload);
-
+      const note = state.notes[action.payload];
       if (note) {
         note.readonly = !note.readonly;
       }
     },
     restoreNoteFromTrash: (state, action: PayloadAction<string>) => {
-      const note = state.notes.get(action.payload);
+      const note = state.notes[action.payload];
       if (note && note.type === "trash") {
         note.type = "note";
         note.readonly = false;
       }
     },
     permaDeleteNote: (state, action: PayloadAction<string>) => {
-      state.notes.delete(action.payload);
+      delete state.notes[action.payload];
       if (state.selectedNoteId === action.payload) {
         state.selectedNoteId = null;
       }
