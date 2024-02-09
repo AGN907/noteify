@@ -25,7 +25,11 @@ startAppListening({
 
     return false;
   },
-  effect: async (_, api) => {
+  effect: async (action, api) => {
+    if (action.type === "notes/permaDeleteNote") {
+      await storage.db.remove(action.payload as string);
+    }
+
     const notesState: Record<string, Item<Note>> = api.getState().notes.notes;
     storage.db.set("notes", Object.keys(notesState));
 
