@@ -2,9 +2,6 @@ import { startAppListening } from "@/app/middleware";
 import type { Item, Note } from "@/components/ListItem/types";
 import storage from "@/lib/db";
 import {
-  Dispatch,
-  ThunkDispatch,
-  UnknownAction,
   createAsyncThunk,
   createSlice,
   type PayloadAction,
@@ -37,15 +34,6 @@ startAppListening({
     await Promise.all(notes.map((note) => storage.db.set(note.id, note)));
   },
 });
-
-export type NotesDispatch = ThunkDispatch<
-  {
-    notes: initialState;
-  },
-  undefined,
-  UnknownAction
-> &
-  Dispatch<UnknownAction>;
 
 export type initialState = {
   notes: Record<string, Item<Note>>;

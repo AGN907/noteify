@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { AppDispatch } from "@/app/store";
 import {
-  NotesDispatch,
   permaDeleteNote,
   restoreNoteFromTrash,
   selectNote,
@@ -40,7 +40,7 @@ export default function TrashNote(props: TrashNoteProps) {
 
 const menuItems = (
   note: Item<Note>,
-  dispatch: NotesDispatch,
+  dispatch: AppDispatch,
 ): Array<MenuItem | MenuItem[]> => [
   {
     name: "Restore",

@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import type { NotesDispatch } from "@/redux/notes/notesSlice";
+import type { AppDispatch } from "@/app/store";
 import {
   duplicateNote,
   favouriteNote,
@@ -18,7 +18,6 @@ import {
 import ListItem from "./ListItem";
 import type { Item, MenuItem, Note } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
-
 interface NoteProps {
   note: Item<Note>;
 }
@@ -56,7 +55,7 @@ export default function Note(props: NoteProps) {
 
 const menuItems = (
   item: Item<Note>,
-  dispatch: NotesDispatch,
+  dispatch: AppDispatch,
 ): Array<MenuItem | MenuItem[]> => [
   [
     {
