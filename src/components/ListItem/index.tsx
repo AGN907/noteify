@@ -1,8 +1,6 @@
 import {
   ContextMenu,
-  ContextMenuCheckboxItem,
   ContextMenuContent,
-  ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
@@ -50,62 +48,37 @@ export default function ListItem(props: ListItemProps) {
 }
 
 const renderContextMenu = (menuItems: () => Array<MenuItem | MenuItem[]>) => {
-  const renderCheckboxItem = ({
-    name,
-    onClick,
-    Icon,
-    isChecked,
-    danger,
-  }: MenuItem) => {
-    return (
-      <ContextMenuCheckboxItem
-        onCheckedChange={() => onClick()}
-        checked={isChecked}
+  const renderMenuItem = ({ Component, Icon, key, name, danger }: MenuItem) => (
+    <Component key={key}>
+      <span className={`absolute left-2 ${danger ? "text-red-500" : ""}`}>
+        {Icon}
+      </span>
+      <span
+        className={`ml-2 ${danger ? "text-red-500 hover:text-red-500" : ""}`}
       >
-        <span className={`absolute left-2 ${danger ? "text-red-500" : ""}`}>
-          {Icon}
-        </span>
-        <span className="ml-2">{name}</span>
-      </ContextMenuCheckboxItem>
-    );
-  };
-  const renderMenuItem = ({ name, onClick, Icon, danger }: MenuItem) => {
-    return (
-      <ContextMenuItem onSelect={() => onClick()} inset>
-        <span className={`absolute left-2 ${danger ? "text-red-500" : ""}`}>
-          {Icon}
-        </span>
-        <span
-          className={`ml-2 ${danger ? "text-red-500 hover:text-red-500" : ""}`}
-        >
-          {name}
-        </span>
-      </ContextMenuItem>
-    );
-  };
+        {name}
+      </span>
+    </Component>
+  );
 
   return (
     <ContextMenuContent>
-      {menuItems().map((menuItem, index) => (
-        <Fragment key={index}>
-          {Array.isArray(menuItem) ? (
-            <>
-              {menuItem.map((item) => (
-                <Fragment key={item.key}>
-                  {item.isChecked !== undefined
-                    ? renderCheckboxItem(item)
-                    : renderMenuItem(item)}
+      {menuItems().map((item, index) => {
+        if (Array.isArray(item)) {
+          return (
+            <Fragment key={index}>
+              {item.map((menuItem) => (
+                <Fragment key={menuItem.key}>
+                  {renderMenuItem(menuItem)}
                 </Fragment>
               ))}
               <ContextMenuSeparator />
-            </>
-          ) : menuItem.isChecked !== undefined ? (
-            renderCheckboxItem(menuItem)
-          ) : (
-            renderMenuItem(menuItem)
-          )}
-        </Fragment>
-      ))}
+            </Fragment>
+          );
+        }
+
+        return renderMenuItem(item);
+      })}
     </ContextMenuContent>
   );
 };

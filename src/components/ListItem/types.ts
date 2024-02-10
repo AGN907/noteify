@@ -1,4 +1,4 @@
-import { Content } from "@tiptap/react";
+import type { Content } from "@tiptap/react";
 
 export type Item<T = {}> = {
   id: string;
@@ -19,6 +19,7 @@ export type Note = {
   readonly: boolean;
   isFavourite: boolean;
   tags?: Item<Tag>[];
+  folderId: string;
 };
 
 export type Tag = {
@@ -27,14 +28,12 @@ export type Tag = {
 
 export type Folder = {
   name: string;
-  notes: Item<Note>[];
 };
 
 export type MenuItem = {
   key: string;
   name: string;
-  onClick: () => void;
-  isChecked?: boolean;
   Icon?: React.ReactNode;
   danger?: boolean;
+  Component: React.ComponentType<{ children: React.ReactNode }>;
 };

@@ -9,6 +9,7 @@ import { PiRecycle, PiTrash } from "react-icons/pi";
 import ListItem from "./ListItem";
 import type { Item, MenuItem, Note } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
+import { ContextMenuItem } from "./ui/context-menu";
 
 interface TrashNoteProps {
   note: Item<Note>;
@@ -46,13 +47,21 @@ const menuItems = (
     name: "Restore",
     key: "restore",
     Icon: <PiRecycle size={18} />,
-    onClick: () => dispatch(restoreNoteFromTrash(note.id)),
+    Component: ({ children }) => (
+      <ContextMenuItem onSelect={() => dispatch(restoreNoteFromTrash(note.id))}>
+        {children}
+      </ContextMenuItem>
+    ),
   },
   {
     name: "Delete forever",
     key: "delete",
     Icon: <PiTrash size={18} />,
-    onClick: () => dispatch(permaDeleteNote(note.id)),
     danger: true,
+    Component: ({ children }) => (
+      <ContextMenuItem onSelect={() => dispatch(permaDeleteNote(note.id))}>
+        {children}
+      </ContextMenuItem>
+    ),
   },
 ];

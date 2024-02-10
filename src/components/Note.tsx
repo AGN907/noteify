@@ -18,6 +18,7 @@ import {
 import ListItem from "./ListItem";
 import type { Item, MenuItem, Note } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
+import { ContextMenuCheckboxItem, ContextMenuItem } from "./ui/context-menu";
 interface NoteProps {
   note: Item<Note>;
 }
@@ -61,23 +62,41 @@ const menuItems = (
     {
       name: "Pin",
       key: "pin",
-      onClick: () => dispatch(pinNote(item.id)),
       Icon: <PiPushPinSimple size={18} />,
-      isChecked: item.isPinned,
+      Component: ({ children }) => (
+        <ContextMenuCheckboxItem
+          checked={item.isPinned}
+          onSelect={() => dispatch(pinNote(item.id))}
+        >
+          {children}
+        </ContextMenuCheckboxItem>
+      ),
     },
     {
       name: "Favorite",
       key: "favorite",
-      onClick: () => dispatch(favouriteNote(item.id)),
       Icon: <PiStar size={18} />,
-      isChecked: item.isFavourite,
+      Component: ({ children }) => (
+        <ContextMenuCheckboxItem
+          checked={item.isFavourite}
+          onSelect={() => dispatch(favouriteNote(item.id))}
+        >
+          {children}
+        </ContextMenuCheckboxItem>
+      ),
     },
     {
       name: "Readonly",
       key: "readonly",
-      onClick: () => dispatch(previewNote(item.id)),
       Icon: <PiPencilSlash size={18} />,
-      isChecked: item.readonly,
+      Component: ({ children }) => (
+        <ContextMenuCheckboxItem
+          checked={item.readonly}
+          onSelect={() => dispatch(previewNote(item.id))}
+        >
+          {children}
+        </ContextMenuCheckboxItem>
+      ),
     },
   ],
 
@@ -85,15 +104,29 @@ const menuItems = (
     {
       name: "Duplicate",
       key: "duplicate",
-      onClick: () => dispatch(duplicateNote(item.id)),
       Icon: <PiCopy size={18} />,
+      Component: ({ children }) => (
+        <ContextMenuItem
+          inset
+          onSelect={() => dispatch(duplicateNote(item.id))}
+        >
+          {children}
+        </ContextMenuItem>
+      ),
     },
   ],
   {
     name: "Move to trash",
     key: "trash",
-    onClick: () => dispatch(moveNoteToTrash(item.id)),
     Icon: <PiTrashSimple size={18} />,
     danger: true,
+    Component: ({ children }) => (
+      <ContextMenuItem
+        inset
+        onSelect={() => dispatch(moveNoteToTrash(item.id))}
+      >
+        {children}
+      </ContextMenuItem>
+    ),
   },
 ];
