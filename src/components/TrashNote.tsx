@@ -48,7 +48,10 @@ const menuItems = (
     key: "restore",
     Icon: <PiRecycle size={18} />,
     Component: ({ children }) => (
-      <ContextMenuItem onSelect={() => dispatch(restoreNoteFromTrash(note.id))}>
+      <ContextMenuItem
+        inset
+        onSelect={() => dispatch(restoreNoteFromTrash(note.id))}
+      >
         {children}
       </ContextMenuItem>
     ),
@@ -59,7 +62,10 @@ const menuItems = (
     Icon: <PiTrash size={18} />,
     danger: true,
     Component: ({ children }) => (
-      <ContextMenuItem onSelect={() => dispatch(permaDeleteNote(note.id))}>
+      <ContextMenuItem
+        inset
+        onSelect={() => dispatch(permaDeleteNote(note.id))}
+      >
         {children}
       </ContextMenuItem>
     ),
