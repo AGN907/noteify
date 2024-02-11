@@ -68,7 +68,9 @@ export const notesSlice = createSlice({
   name: "notes",
   initialState,
   reducers: {
-    createNote: (state) => {
+    createNote: (state, action: PayloadAction<string | undefined>) => {
+      const folderId = action?.payload ?? "";
+
       const note = {
         id: uuid(),
         title: "New Note",
@@ -80,6 +82,7 @@ export const notesSlice = createSlice({
         isFavourite: false,
         isPinned: false,
         readonly: false,
+        folderId,
       };
 
       state.notes[note.id] = note;
@@ -155,14 +158,27 @@ export const notesSlice = createSlice({
         toast.success("Note was duplicated successfully");
       }
     },
-    moveNoteToTrash: (state, action: PayloadAction<string>) => {
-      const note = state.notes[action.payload];
-      if (note) {
-        note.type = "trash";
-        note.readonly = true;
-        note.deletedAt = Date.now();
+    moveNoteToTrash: (state, action: PayloadAction<string | string[]>) => {
+      let noteIds: string[];
+      if (Array.isArray(action.payload)) {
+        noteIds = action.payload;
+      } else {
+        noteIds = [action.payload];
       }
-      if (state.selectedNoteId === action.payload) {
+
+      noteIds.forEach((noteId) => {
+        const note = state.notes[noteId];
+        if (note) {
+          state.notes[noteId] = {
+            ...note,
+            type: "trash",
+            deletedAt: Date.now(),
+            readonly: true,
+          };
+        }
+      });
+
+      if (state.selectedNoteId && noteIds.includes(state.selectedNoteId)) {
         state.selectedNoteId = null;
       }
     },
