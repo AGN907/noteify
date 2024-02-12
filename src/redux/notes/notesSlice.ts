@@ -204,6 +204,46 @@ export const notesSlice = createSlice({
         state.selectedNoteId = null;
       }
     },
+    assignNoteToFolder: (
+      state,
+      action: PayloadAction<{ noteId: string; folderId: string }>,
+    ) => {
+      const { noteId, folderId } = action.payload;
+      const note = state.notes[noteId];
+      if (note) {
+        state.notes[noteId] = {
+          ...note,
+          folderId,
+        };
+      }
+    },
+    removeNoteFromFolder: (state, action: PayloadAction<string>) => {
+      const note = state.notes[action.payload];
+      if (note) {
+        state.notes[note.id] = {
+          ...note,
+          folderId: "",
+        };
+      }
+    },
+    trashFolderNotes: (state, action: PayloadAction<string>) => {
+      const folderId = action.payload;
+      const notes = Object.values(state.notes).filter(
+        (note) => note.folderId === folderId,
+      );
+
+      notes.forEach((note) => {
+        state.notes[note.id] = {
+          ...note,
+          type: "trash",
+          readonly: true,
+          deletedAt: Date.now(),
+          folderId: "",
+        };
+
+        toast.success(`${notes.length} notes were moved to trash`);
+      });
+    },
   },
   extraReducers(builder) {
     builder.addCase(loadNotes.fulfilled, (state, action) => {
@@ -224,6 +264,9 @@ export const {
   previewNote,
   restoreNoteFromTrash,
   permaDeleteNote,
+  assignNoteToFolder,
+  removeNoteFromFolder,
+  trashFolderNotes,
 } = notesSlice.actions;
 
 export default notesSlice.reducer;
