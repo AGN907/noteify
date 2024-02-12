@@ -149,8 +149,8 @@ export const notesSlice = createSlice({
         state.notes[id] = {
           ...note,
           id,
-          title: `Copy of ${note.title}`,
-          content: `${note.title}`,
+          title: `${note.title}`,
+          content: note.content,
           createdAt: currentTimestamp,
           updatedAt: currentTimestamp,
         };
