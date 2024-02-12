@@ -10,11 +10,13 @@ import {
 } from "@/redux/notes/notesSlice";
 import {
   PiCopy,
+  PiFolder,
   PiPencilSlash,
   PiPushPinSimple,
   PiStar,
   PiTrashSimple,
 } from "react-icons/pi";
+import NoteAssignFolderDialog from "./Dialogs/NoteAssignFolder";
 import ListItem from "./ListItem";
 import type { Item, MenuItem, Note } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
@@ -114,6 +116,18 @@ const menuItems = (
         </ContextMenuItem>
       ),
     },
+    {
+      name: "Assign to folder",
+      key: "assign-to-folder",
+      Icon: <PiFolder size={18} />,
+      Component: ({ children }) => (
+        <NoteAssignFolderDialog selectedNote={item}>
+          <ContextMenuItem onSelect={(e) => e.preventDefault()} inset>
+            {children}
+          </ContextMenuItem>
+        </NoteAssignFolderDialog>
+      ),
+    },
   ],
   {
     name: "Move to trash",
@@ -123,7 +137,9 @@ const menuItems = (
     Component: ({ children }) => (
       <ContextMenuItem
         inset
-        onSelect={() => dispatch(moveNoteToTrash(item.id))}
+        onSelect={() => {
+          dispatch(moveNoteToTrash(item.id));
+        }}
       >
         {children}
       </ContextMenuItem>
