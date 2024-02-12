@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import Editor from "@/components/editor/Editor";
 import SidebarMenu from "@/components/shared/SidebarMenu";
 import { debounce } from "@/lib/utils";
+import { loadFolders } from "@/redux/folders/foldersSlice";
 import { loadNotes, updateNote } from "@/redux/notes/notesSlice";
 import type { JSONContent } from "@tiptap/react";
 import { useEffect } from "react";
@@ -12,6 +13,8 @@ export default function Root() {
   const { selectedNoteId, notes, isNotesLoading } = useAppSelector(
     (state) => state.notes,
   );
+
+  const { isFoldersLoading } = useAppSelector((state) => state.folders);
 
   const selectedNote = notes[selectedNoteId ?? ""];
 
@@ -28,9 +31,10 @@ export default function Root() {
 
   useEffect(() => {
     dispatch(loadNotes());
+    dispatch(loadFolders());
   }, []);
 
-  if (isNotesLoading) {
+  if (isNotesLoading || isFoldersLoading) {
     return (
       <div className="flex h-full items-center justify-center pt-32">
         <div className="flex flex-col items-center justify-center">

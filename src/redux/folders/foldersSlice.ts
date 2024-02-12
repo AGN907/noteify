@@ -1,6 +1,59 @@
+import { startAppListening } from "@/app/middleware";
 import type { Folder, Item } from "@/components/ListItem/types";
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import storage from "@/lib/db";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { v4 as uuid } from "uuid";
+
+startAppListening({
+  predicate: (action) => {
+    if (action.type === "folders/loadFolders.fulfilled") {
+      return false;
+    }
+
+    if (action.type.startsWith("folders/")) {
+      return true;
+    }
+
+    return false;
+  },
+  effect: async (action, api) => {
+    if (action.type === "folders/removeFolder") {
+      await storage.db.remove(action.payload as string);
+    }
+
+    const foldersState: Record<string, Item<Folder>> = api.getState().folders
+      .folders;
+
+    storage.db.set("folders", Object.keys(foldersState));
+
+    const folders = Object.values(foldersState);
+
+    await Promise.all(
+      folders.map((folder) => storage.db.set(folder.id, folder)),
+    );
+  },
+});
+
+export const loadFolders = createAsyncThunk("folders/loadFolders", async () => {
+  const foldersIds = (await storage.db.get<string[]>("folders")) ?? [];
+  const folders = await Promise.all(
+    foldersIds.map((id) => storage.db.get<Item<Folder>>(id)),
+  );
+
+  return folders.reduce(
+    (acc, folder) => {
+      if (folder) {
+        acc[folder.id] = folder;
+      }
+      return acc;
+    },
+    {} as Record<string, Item<Folder>>,
+  );
+});
 
 type initialState = {
   folders: Record<string, Item<Folder>>;
@@ -19,6 +72,7 @@ const foldersSlice = createSlice({
     addFolder: (state, action: PayloadAction<{ name: string }>) => {
       const id = uuid();
       const { name } = action.payload;
+
       state.folders[id] = {
         id,
         name,
@@ -40,6 +94,12 @@ const foldersSlice = createSlice({
     removeFolder: (state, action) => {
       delete state.folders[action.payload];
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(loadFolders.fulfilled, (state, action) => {
+      state.folders = action.payload;
+      state.isFoldersLoading = false;
+    });
   },
 });
 
