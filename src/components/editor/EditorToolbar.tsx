@@ -40,7 +40,7 @@ export default function EditorToolbar({ editor }: { editor: Editor | null }) {
   };
 
   return (
-    <div className="fixed left-[38rem] right-0 top-0 z-20">
+    <div className="fixed left-[47rem] right-0 top-0 z-20">
       <div className="flex w-full items-center gap-x-4 bg-background py-4">
         <Select
           onValueChange={(value) => toggleHeading(Number(value) as Level)}

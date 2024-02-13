@@ -5,7 +5,7 @@ import {
   useEditor,
   type JSONContent,
 } from "@tiptap/react";
-import { Item, Note } from "../ListItem/types";
+import type { Item, Note } from "../ListItem/types";
 import EditorToolbar, { extensions } from "./EditorToolbar";
 
 interface EditorProps {
@@ -42,7 +42,7 @@ export default function Editor(props: EditorProps) {
       editorProps: {
         attributes: {
           class: cn(
-            "prose prose-sm fixed left-52 min-h-screen w-full p-2 dark:prose-invert sm:prose lg:prose-lg xl:prose-lg focus:outline-none",
+            "prose prose-sm fixed left-52 min-h-screen w-full p-2 dark:prose-invert sm:prose lg:prose-lg xl:prose-lg focus:outline-none prose-code:rounded-md prose-code:bg-slate-300 prose-code:text-slate-900 prose-pre:rounded-md prose-pre:bg-slate-300 prose-pre:p-2 prose-code:dark:bg-neutral-800 prose-code:dark:text-slate-100 prose-pre:dark:bg-neutral-800",
             editable ? "top-20" : "top-8",
           ),
         },
@@ -52,7 +52,7 @@ export default function Editor(props: EditorProps) {
   );
 
   return (
-    <div className="ml-[26rem] w-full">
+    <div className="ml-[34rem] w-full">
       {editor?.isEditable && <EditorToolbar editor={editor} />}
       <div className="w-full">
         <EditorContent editor={editor} />
