@@ -18,7 +18,7 @@ export type Note = {
   isPinned: boolean;
   readonly: boolean;
   isFavourite: boolean;
-  tags?: Item<Tag>[];
+  tags: string[];
   folderId: string;
 };
 
