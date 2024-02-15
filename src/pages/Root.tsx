@@ -4,6 +4,7 @@ import SidebarMenu from "@/components/shared/SidebarMenu";
 import { debounce } from "@/lib/utils";
 import { loadFolders } from "@/redux/folders/foldersSlice";
 import { loadNotes, updateNote } from "@/redux/notes/notesSlice";
+import { loadTags } from "@/redux/tags/tagsSlice";
 import type { JSONContent } from "@tiptap/react";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
@@ -32,6 +33,7 @@ export default function Root() {
   useEffect(() => {
     dispatch(loadNotes());
     dispatch(loadFolders());
+    dispatch(loadTags());
   }, []);
 
   if (isNotesLoading || isFoldersLoading) {
