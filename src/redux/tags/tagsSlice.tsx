@@ -2,6 +2,7 @@ import { startAppListening } from "@/app/middleware";
 import type { Item, Tag } from "@/components/ListItem/types";
 import storage from "@/lib/db";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 
 startAppListening({
@@ -59,6 +60,13 @@ export const tagsSlice = createSlice({
       const { name } = action.payload;
       const id = action.payload.id ?? uuid();
 
+      if (
+        state.tags.find((tag) => tag.name.toLowerCase() === name.toLowerCase())
+      ) {
+        toast.error("Tag already exists");
+        return;
+      }
+
       state.tags.push({
         id,
         name,
@@ -67,9 +75,18 @@ export const tagsSlice = createSlice({
         deletedAt: 0,
         type: "tag",
       });
+
+      toast.success("Tag was created successfully");
     },
     updateTag: (state, action: PayloadAction<{ id: string; name: string }>) => {
       const { id, name } = action.payload;
+
+      if (
+        state.tags.find((tag) => tag.name.toLowerCase() === name.toLowerCase())
+      ) {
+        toast.error("Tag already exists");
+        return;
+      }
 
       const tag = state.tags.find((tag) => tag.id === id);
 
@@ -77,12 +94,16 @@ export const tagsSlice = createSlice({
         tag.name = name;
         tag.updatedAt = Date.now();
       }
+
+      toast.success("Tag was updated successfully");
     },
 
     removeTag: (state, action: PayloadAction<string>) => {
       const id = action.payload;
 
       state.tags = state.tags.filter((tag) => tag.id !== id);
+
+      toast.success("Tag was removed successfully");
     },
   },
   extraReducers: (builder) => {
