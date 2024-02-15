@@ -11,16 +11,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRef } from "react";
 
-export default function CreateFolderDialog({
-  children,
-  onCreateFolder,
-  defaultName = "",
-}: {
+type CreateFolderDialogProps = {
   children: React.ReactNode;
   onCreateFolder: (name: string) => void;
   defaultName?: string;
-}) {
+};
+
+export default function CreateFolderDialog(props: CreateFolderDialogProps) {
+  const { children, onCreateFolder, defaultName = "" } = props;
+
   const inputRef = useRef<HTMLInputElement>(null);
+
   const actionText = defaultName ? "Rename" : "Create";
 
   return (
