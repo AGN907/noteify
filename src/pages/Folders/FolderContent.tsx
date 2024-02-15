@@ -50,7 +50,7 @@ export default function FolderContent() {
           />
         </Button>
       </div>
-      <hr className="border-t border-gray-200" />
+      <hr className="border-t border-accent" />
       {folderNotes.length === 0 && (
         <div className="flex items-center justify-center px-4 pt-32">
           <p>No notes yet. Add notes to this folder to view them here.</p>

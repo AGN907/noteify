@@ -37,7 +37,7 @@ export default function TagContent() {
           {selectedTag?.name}
         </h1>
       </div>
-      <hr className="border-t border-gray-200" />
+      <hr className="border-t border-accent" />
       {tagNotes.length === 0 && (
         <div className="flex items-center justify-center px-4 pt-32">
           <p>No notes yet. Add this tag to a note to view them here.</p>
