@@ -6,6 +6,7 @@ import {
   type JSONContent,
 } from "@tiptap/react";
 import type { Item, Note } from "../ListItem/types";
+import TagInput from "../TagInput";
 import EditorToolbar, { extensions } from "./EditorToolbar";
 
 interface EditorProps {
@@ -53,7 +54,12 @@ export default function Editor(props: EditorProps) {
 
   return (
     <div className="ml-[34rem] w-full">
-      {editor?.isEditable && <EditorToolbar editor={editor} />}
+      {editor?.isEditable && (
+        <>
+          <EditorToolbar editor={editor} />
+          <TagInput />
+        </>
+      )}
       <div className="w-full">
         <EditorContent editor={editor} />
       </div>
