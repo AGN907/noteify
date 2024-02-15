@@ -4,6 +4,7 @@ import FolderContent, { loader as folderLoader } from "./Folders/FolderContent";
 import Folders from "./Folders/FoldersList";
 import Notes from "./Notes";
 import Root from "./Root";
+import TagContent, { loader as tagLoader } from "./Tags/TagContent";
 import TagsList from "./Tags/TagsList";
 import Trash from "./Trash";
 
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
       {
         path: "tags",
         element: <TagsList />,
+      },
+      {
+        path: "tags/:tagId",
+        element: <TagContent />,
+        loader: tagLoader,
       },
     ],
   },
