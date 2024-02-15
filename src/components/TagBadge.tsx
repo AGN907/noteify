@@ -15,10 +15,18 @@ export default function TagBadge(props: TagBadgeProps) {
 
   return (
     <div className="relative">
-      <Badge onClick={onTagClick} variant="outline" className="pr-5">
+      <Badge
+        onClick={onTagClick}
+        variant="outline"
+        className="cursor-pointer pr-5"
+      >
         {tag.name}
       </Badge>
-      <PiX size={12} onClick={onTagDelete} className="absolute right-1 top-2" />
+      <PiX
+        size={12}
+        onClick={onTagDelete}
+        className="absolute right-1 top-2 cursor-pointer"
+      />
     </div>
   );
 }
