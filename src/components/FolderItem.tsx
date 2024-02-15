@@ -39,7 +39,7 @@ export default function FolderItem(props: FolderItemProps) {
         <div>
           {folderNotes.length === 0
             ? "No notes"
-            : `${folderNotes.length} notes`}
+            : `${folderNotes.length} ${folderNotes.length === 1 ? "note" : "notes"}`}
         </div>
       }
       onItemClick={handleSelectFolder}
