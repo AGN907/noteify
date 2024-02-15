@@ -251,6 +251,50 @@ export const notesSlice = createSlice({
         toast.success(`${notes.length} notes were moved to trash`);
       });
     },
+    addTagToNote: (
+      state,
+      action: PayloadAction<{ noteId: string; tagId: string }>,
+    ) => {
+      const { noteId, tagId } = action.payload;
+      const note = state.notes[noteId];
+
+      if (note) {
+        state.notes[noteId] = {
+          ...note,
+          tags: [...note.tags, tagId],
+        };
+      }
+    },
+    removeTagFromNote: (
+      state,
+      action: PayloadAction<{ noteId: string; tagId: string }>,
+    ) => {
+      const { noteId, tagId } = action.payload;
+      const note = state.notes[noteId];
+
+      if (note) {
+        state.notes[noteId] = {
+          ...note,
+          tags: note.tags.filter((tag) => tag !== tagId),
+        };
+      }
+    },
+    trashTagNotes: (state, action: PayloadAction<string>) => {
+      const tagId = action.payload;
+
+      const notes = Object.values(state.notes).filter((note) =>
+        note.tags.includes(tagId),
+      );
+
+      notes.forEach((note) => {
+        note.type = "trash";
+        note.deletedAt = Date.now();
+        note.readonly = true;
+        note.tags = note.tags.filter((t) => t !== tagId);
+      });
+
+      toast.success(`${notes.length} notes were moved to trash`);
+    },
   },
   extraReducers(builder) {
     builder.addCase(loadNotes.fulfilled, (state, action) => {
@@ -274,6 +318,9 @@ export const {
   assignNoteToFolder,
   removeNoteFromFolder,
   trashFolderNotes,
+  addTagToNote,
+  removeTagFromNote,
+  trashTagNotes,
 } = notesSlice.actions;
 
 export default notesSlice.reducer;
