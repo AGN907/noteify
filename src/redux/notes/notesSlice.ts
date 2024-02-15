@@ -83,6 +83,7 @@ export const notesSlice = createSlice({
         isPinned: false,
         readonly: false,
         folderId,
+        tags: [],
       };
 
       state.notes[note.id] = note;
@@ -147,12 +148,18 @@ export const notesSlice = createSlice({
 
       if (note) {
         state.notes[id] = {
-          ...note,
+          type: "note",
           id,
           title: `${note.title}`,
           content: note.content,
+          isFavourite: false,
+          isPinned: false,
+          readonly: false,
           createdAt: currentTimestamp,
           updatedAt: currentTimestamp,
+          deletedAt: 0,
+          folderId: "",
+          tags: [],
         };
 
         toast.success("Note was duplicated successfully");
