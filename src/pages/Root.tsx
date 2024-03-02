@@ -50,16 +50,24 @@ export default function Root() {
   }
 
   return (
-    <div>
-      <div>
-        <SidebarMenu />
-      </div>
-      <div className="fixed bottom-0 left-52 top-0">
-        <div className="h-full w-80 space-y-4 overflow-scroll border border-l-accent">
-          <Outlet />
+    <div className="flex h-screen w-full overflow-hidden">
+      <div
+        data-selected={!!selectedNoteId}
+        className="col-span-3 flex max-w-xl flex-1 max-md:data-[selected=false]:col-span-9 max-md:data-[selected=true]:hidden"
+      >
+        <div className="h-screen max-w-52 xl:flex-1">
+          <SidebarMenu />
+        </div>
+        <div className="h-full flex-1 space-y-4 md:max-w-96">
+          <div className="border-r">
+            <Outlet />
+          </div>
         </div>
       </div>
-      <div>
+      <div
+        data-selected={!!selectedNoteId}
+        className="flex h-full flex-1 flex-col max-md:data-[selected=false]:hidden"
+      >
         {selectedNote ? (
           <Editor
             onChange={({ title = "New Note", content }) =>
@@ -68,14 +76,10 @@ export default function Root() {
             note={selectedNote}
           />
         ) : (
-          <div className="ml-52 flex h-full items-center justify-center pt-32">
-            <div className="flex flex-col items-center justify-center">
-              <div className="flex items-center space-x-2">
-                <span className="text-4xl">📝</span>
-                <p className="text-xl">
-                  Create a note or select an existing one
-                </p>
-              </div>
+          <div className="flex h-full flex-col items-center justify-center">
+            <div className="flex flex-wrap items-center space-x-2">
+              <span className="text-4xl">📝</span>
+              <p className="text-xl">Create a note or select an existing one</p>
             </div>
           </div>
         )}

@@ -109,7 +109,7 @@ export const notesSlice = createSlice({
         };
       }
     },
-    selectNote: (state, action: PayloadAction<string>) => {
+    selectNote: (state, action: PayloadAction<string | null>) => {
       state.selectedNoteId = action.payload;
     },
 
