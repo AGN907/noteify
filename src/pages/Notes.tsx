@@ -15,7 +15,7 @@ function Notes() {
 
   return (
     <div>
-      <div className="mb-4 mt-2 flex items-center justify-between px-4">
+      <div className="mb-4 mt-2 flex items-center justify-between px-4 max-xl:pl-14">
         <h2 className="text-xl font-semibold">Notes</h2>
         <Button
           aria-label="Create a new note"

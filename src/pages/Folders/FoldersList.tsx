@@ -20,7 +20,7 @@ export default function Folders() {
 
   return (
     <div>
-      <div className="mb-4 mt-2 flex items-center justify-between px-4">
+      <div className="mb-4 mt-2 flex items-center justify-between px-4 max-xl:pl-14">
         <h2 className="text-xl font-semibold">Folders</h2>
         <CreateFolderDialog onCreateFolder={handleCreateFolder}>
           <Button aria-label="Create a new folder" variant="link" size="icon">

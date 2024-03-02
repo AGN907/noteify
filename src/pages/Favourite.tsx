@@ -11,7 +11,7 @@ export default function Favourite() {
 
   return (
     <div>
-      <div className="mb-4 mt-2 flex items-center justify-between px-4">
+      <div className="mb-4 mt-2 flex items-center justify-between px-4 max-xl:pl-14">
         <h2 className="text-xl font-semibold">Favourites</h2>
       </div>
 
