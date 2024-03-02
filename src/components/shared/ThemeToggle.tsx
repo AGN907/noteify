@@ -8,6 +8,7 @@ export default function ThemeToggle() {
   return (
     <Button
       variant="ghost"
+      className="w-full"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       {theme === "light" ? <PiMoonStars size={20} /> : <PiSun size={20} />}
