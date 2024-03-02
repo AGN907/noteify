@@ -1,13 +1,16 @@
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 import {
   PiFolderNotch,
-  PiGear,
   PiHash,
+  PiList,
   PiNote,
   PiStar,
   PiTrashSimple,
 } from "react-icons/pi";
-import { NavLink, NavLinkProps } from "react-router-dom";
+import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
+import { Button } from "../ui/button";
 import ThemeToggle from "./ThemeToggle";
 
 const sidebarItems = [
@@ -37,27 +40,61 @@ const sidebarItems = [
     Icon: <PiTrashSimple size={22} />,
   },
 ];
+
 export default function SidebarMenu() {
+  const { pathname } = useLocation();
+  const isDesktopScreen = useMediaQuery("(min-width: 1280px)");
+
+  const hideMenuToggler = [
+    /^\/tags\/[a-zA-Z0-9]+/,
+    /^\/folders\/[a-zA-Z0-9]+/,
+  ].some((r) => r.test(pathname));
+
+  const [menuActive, setMenuActive] = useState(isDesktopScreen);
+
+  useEffect(() => {
+    setMenuActive(isDesktopScreen);
+  }, [isDesktopScreen]);
+
+  const handleMenuToggle = () => {
+    console.log("clicked");
+    setMenuActive(!menuActive);
+  };
+
   return (
-    <div className="fixed bottom-0 left-0 top-0 h-screen w-52">
-      <div className="flex h-full w-full flex-col border border-r-accent">
-        <nav>
-          {sidebarItems.map(({ name, path, Icon }) => (
-            <SidebarItem key={name} name={name} to={path} icon={Icon} />
+    <div data-active={menuActive} className="h-full w-full">
+      <Button
+        data-hidden={hideMenuToggler}
+        className="absolute left-2 top-2 z-20 data-[hidden=true]:hidden xl:hidden"
+        onClick={handleMenuToggle}
+        variant="link"
+        size="icon"
+      >
+        <PiList size={28} />
+      </Button>
+      <div
+        data-active={menuActive}
+        onClick={() => setMenuActive(false)}
+        className="absolute bottom-0 left-0 right-0 top-0 z-10 hidden bg-black/20 dark:bg-neutral-800/50 max-xl:data-[active=true]:block"
+      ></div>
+      <div
+        data-active={menuActive}
+        className="z-20 h-full w-full max-w-52 border-r bg-background transition-all duration-300 ease-in-out data-[active=true]:translate-x-0 max-xl:fixed max-xl:data-[active=false]:translate-x-[-250px] xl:bottom-0 xl:top-0"
+      >
+        <nav className="flex h-full flex-col">
+          {sidebarItems.map((item) => (
+            <SidebarItem
+              onClick={menuActive ? handleMenuToggle : undefined}
+              key={item.name}
+              name={item.name}
+              icon={item.Icon}
+              to={item.path}
+            />
           ))}
-        </nav>
-        <div className="mt-auto flex items-center transition-colors hover:bg-accent/50">
-          <SidebarItem
-            className="hover:bg-transparent"
-            name="Settings"
-            to="/settings"
-            icon={<PiGear size={22} />}
-          />
-          <hr className="h-8 w-0.5 bg-accent" />
-          <div className="ml-auto">
+          <div className="mt-auto w-full pb-2">
             <ThemeToggle />
           </div>
-        </div>
+        </nav>
       </div>
     </div>
   );
@@ -80,7 +117,7 @@ export function SidebarItem(props: SidebarItemProps) {
               ? "bg-accent text-accent-foreground"
               : "text-muted-foreground"
           }
-          flex w-full items-center gap-x-4 p-2 py-3 hover:bg-accent/50
+          flex items-center gap-x-4 p-2 py-3 hover:bg-accent/50 max-xl:w-full
           `,
           className,
         );
