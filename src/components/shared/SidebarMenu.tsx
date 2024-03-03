@@ -91,7 +91,7 @@ export default function SidebarMenu() {
               to={item.path}
             />
           ))}
-          <div className="mt-auto w-full pb-2">
+          <div className="mx-auto mt-auto pb-2">
             <ThemeToggle />
           </div>
         </nav>
