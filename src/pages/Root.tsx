@@ -7,6 +7,7 @@ import { loadNotes, updateNote } from "@/redux/notes/notesSlice";
 import { loadTags } from "@/redux/tags/tagsSlice";
 import type { JSONContent } from "@tiptap/react";
 import { useEffect } from "react";
+import { PiNotePencil, PiPencilLight } from "react-icons/pi";
 import { Outlet } from "react-router-dom";
 
 export default function Root() {
@@ -38,11 +39,10 @@ export default function Root() {
 
   if (isNotesLoading || isFoldersLoading) {
     return (
-      <div className="flex h-full items-center justify-center pt-32">
+      <div className="flex h-screen items-center justify-center">
         <div className="flex flex-col items-center justify-center">
           <div className="flex items-center space-x-2">
-            <span className="text-4xl">📝</span>
-            <p className="text-xl">Loading...</p>
+            <PiNotePencil className="animate-bounce" size={44} />
           </div>
         </div>
       </div>
@@ -78,7 +78,7 @@ export default function Root() {
         ) : (
           <div className="flex h-full flex-col items-center justify-center">
             <div className="flex flex-wrap items-center space-x-2">
-              <span className="text-4xl">📝</span>
+              <PiPencilLight size={28} />
               <p className="text-xl">Create a note or select an existing one</p>
             </div>
           </div>
