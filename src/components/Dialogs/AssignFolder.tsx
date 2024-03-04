@@ -14,7 +14,7 @@ import {
 } from "../ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 
-export default function NoteAssignFolderDialog({
+export default function AssignFolderDialog({
   children,
   selectedNote,
 }: {
