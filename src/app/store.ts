@@ -1,11 +1,7 @@
 import foldersSlice from "@/redux/folders/foldersSlice";
 import notesReducer from "@/redux/notes/notesSlice";
 import tagsSlice from "@/redux/tags/tagsSlice";
-import {
-  ListenerMiddleware,
-  combineReducers,
-  configureStore,
-} from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { listenerMiddleware } from "./middleware";
 
 const rootReducer = combineReducers({
@@ -19,15 +15,14 @@ export const setupStore = ({
   middleware,
 }: {
   preloadedState?: Partial<RootState>;
-  middleware?: ListenerMiddleware[];
+  middleware?: boolean;
 }) =>
   configureStore({
     reducer: rootReducer,
     preloadedState,
     middleware(getDefaultMiddleware) {
-      return middleware
-        ? getDefaultMiddleware().prepend(middleware)
-        : getDefaultMiddleware();
+      if (!middleware) return getDefaultMiddleware();
+      return getDefaultMiddleware().prepend(listenerMiddleware.middleware);
     },
   });
 
@@ -35,4 +30,4 @@ export type RootState = ReturnType<typeof rootReducer>;
 export type AppStore = ReturnType<typeof setupStore>;
 export type AppDispatch = AppStore["dispatch"];
 
-export default setupStore({ middleware: [listenerMiddleware.middleware] });
+export default setupStore({});
