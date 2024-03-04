@@ -26,7 +26,11 @@ export default function FolderContent() {
 
   const dispatch = useAppDispatch();
 
-  const selectedFolder = folders[folderId];
+  const selectedFolder = folders.find((folder) => folder.id === folderId);
+
+  if (!selectedFolder) {
+    return <p>Folder not found</p>;
+  }
 
   const folderNotes = notes.filter(
     (note) => note.folderId === folderId && note.type === "note",

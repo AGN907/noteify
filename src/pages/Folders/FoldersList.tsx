@@ -16,7 +16,7 @@ export default function Folders() {
     dispatch(addFolder({ name }));
   };
 
-  const foldersArray = Object.values(folders);
+  folders;
 
   return (
     <div>
@@ -29,13 +29,13 @@ export default function Folders() {
         </CreateFolderDialog>
       </div>
       <div>
-        {foldersArray.length === 0 && (
+        {folders.length === 0 && (
           <div className="flex items-center justify-center space-x-2 px-4 pt-32">
             <p>No folders yet. Click the button to create a new folder.</p>
           </div>
         )}
         <ListItemContainer
-          items={foldersArray}
+          items={folders}
           renderItem={(folder) => <FolderItem folder={folder} />}
         />
       </div>

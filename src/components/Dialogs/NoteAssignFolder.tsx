@@ -26,11 +26,6 @@ export default function NoteAssignFolderDialog({
   const dispatch = useAppDispatch();
   const { folders } = useAppSelector((state) => state.folders);
 
-  const foldersArray = Object.values(folders).map((folder) => ({
-    id: folder.id,
-    name: folder.name,
-  }));
-
   const handleSelectFolder = (folderId: string) => {
     setSelectedFolderId(folderId);
   };
@@ -59,7 +54,7 @@ export default function NoteAssignFolderDialog({
                 <SelectValue placeholder="Select a folder" />
               </SelectTrigger>
               <SelectContent>
-                {foldersArray.map((folder) => (
+                {folders.map((folder) => (
                   <SelectItem key={folder.id} id={folder.id} value={folder.id}>
                     {folder.name}
                   </SelectItem>

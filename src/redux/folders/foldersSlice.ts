@@ -25,12 +25,14 @@ startAppListening({
       await storage.db.remove(action.payload as string);
     }
 
-    const foldersState: Record<string, Item<Folder>> = api.getState().folders
-      .folders;
+    const foldersState: Item<Folder>[] = api.getState().folders.folders;
 
-    storage.db.set("folders", Object.keys(foldersState));
+    storage.db.set(
+      "folders",
+      foldersState.map((f) => f.id),
+    );
 
-    const folders = Object.values(foldersState);
+    const folders = foldersState;
 
     await Promise.all(
       folders.map((folder) => storage.db.set(folder.id, folder)),
@@ -44,24 +46,21 @@ export const loadFolders = createAsyncThunk("folders/loadFolders", async () => {
     foldersIds.map((id) => storage.db.get<Item<Folder>>(id)),
   );
 
-  return folders.reduce(
-    (acc, folder) => {
-      if (folder) {
-        acc[folder.id] = folder;
-      }
-      return acc;
-    },
-    {} as Record<string, Item<Folder>>,
-  );
+  return folders.reduce((acc, folder) => {
+    if (folder) {
+      acc.push(folder);
+    }
+    return acc;
+  }, [] as Item<Folder>[]);
 });
 
 type initialState = {
-  folders: Record<string, Item<Folder>>;
+  folders: Item<Folder>[];
   isFoldersLoading: boolean;
 };
 
 const initialState: initialState = {
-  folders: {},
+  folders: [],
   isFoldersLoading: true,
 };
 
@@ -73,26 +72,29 @@ const foldersSlice = createSlice({
       const id = uuid();
       const { name } = action.payload;
 
-      state.folders[id] = {
+      state.folders.push({
         id,
         name,
         createdAt: Date.now(),
         updatedAt: Date.now(),
         deletedAt: 0,
         type: "folder",
-      };
+      });
     },
     updateFolder: (
       state,
       action: PayloadAction<{ id: string; name: string }>,
     ) => {
       const { id, name } = action.payload;
-      state.folders[id].name = name;
+      const folderIndex = state.folders.findIndex((f) => f.id === id);
 
-      state.folders[id].updatedAt = Date.now();
+      if (folderIndex !== -1) {
+        state.folders[folderIndex].name = name;
+        state.folders[folderIndex].updatedAt = Date.now();
+      }
     },
     removeFolder: (state, action) => {
-      delete state.folders[action.payload];
+      state.folders = state.folders.filter((f) => f.id !== action.payload);
     },
   },
   extraReducers(builder) {
