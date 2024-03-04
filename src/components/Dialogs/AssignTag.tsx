@@ -14,10 +14,12 @@ type AssignTagDialogProps = {
   children: React.ReactNode;
   onTagAssign: (name: string, isNew?: boolean) => void;
   onTagRemove: (tagId: string) => void;
+  open?: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
 export default function AssignTagDialog(props: AssignTagDialogProps) {
-  const { children, onTagAssign, onTagRemove } = props;
+  const { children, onTagAssign, onTagRemove, ...restProps } = props;
   const [tagName, setTagName] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -59,7 +61,7 @@ export default function AssignTagDialog(props: AssignTagDialogProps) {
   };
 
   return (
-    <Dialog>
+    <Dialog {...restProps}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>Assign tag</DialogHeader>

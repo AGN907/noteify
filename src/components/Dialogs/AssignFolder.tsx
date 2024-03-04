@@ -14,13 +14,15 @@ import {
 } from "../ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 
-export default function AssignFolderDialog({
-  children,
-  selectedNote,
-}: {
-  children: React.ReactNode;
+type AssignFolderDialogProps = {
+  children?: React.ReactNode;
   selectedNote: Item<Note>;
-}) {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+};
+
+export default function AssignFolderDialog(props: AssignFolderDialogProps) {
+  const { children, selectedNote, ...restProps } = props;
   const [selectedFolderId, setSelectedFolderId] = useState<string>("");
 
   const dispatch = useAppDispatch();
@@ -42,7 +44,7 @@ export default function AssignFolderDialog({
   };
 
   return (
-    <Dialog>
+    <Dialog {...restProps}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader className="text-lg">Assign note to folder</DialogHeader>

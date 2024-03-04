@@ -15,16 +15,18 @@ import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 
 type DeleteTagProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onDeleteTag: (deleteAllNotes: boolean) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export default function DeleteTagDialog(props: DeleteTagProps) {
-  const { children, onDeleteTag } = props;
+  const { children, onDeleteTag, ...restProps } = props;
   const checkboxRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <AlertDialog>
+    <AlertDialog {...restProps}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

@@ -12,20 +12,22 @@ import { Input } from "@/components/ui/input";
 import { useRef } from "react";
 
 type CreateFolderDialogProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onCreateFolder: (name: string) => void;
   defaultName?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export default function CreateFolderDialog(props: CreateFolderDialogProps) {
-  const { children, onCreateFolder, defaultName = "" } = props;
+  const { children, onCreateFolder, defaultName = "", ...restProps } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const actionText = defaultName ? "Rename" : "Create";
 
   return (
-    <Dialog>
+    <Dialog {...restProps}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>{actionText} folder</DialogHeader>

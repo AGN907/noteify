@@ -15,16 +15,18 @@ import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 
 type DeleteFolderProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onDeleteFolder: (deleteAllNotes: boolean) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export default function DeleteFolderDialog(props: DeleteFolderProps) {
-  const { children, onDeleteFolder } = props;
+  const { children, onDeleteFolder, ...restProps } = props;
   const checkboxRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <AlertDialog>
+    <AlertDialog {...restProps}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

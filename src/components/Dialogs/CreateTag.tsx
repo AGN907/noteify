@@ -12,20 +12,22 @@ import {
 import { Input } from "../ui/input";
 
 type CreateTagDialogProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onCreateTag: (name: string) => void;
   defaultName?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export default function CreateTagDialog(props: CreateTagDialogProps) {
-  const { children, onCreateTag, defaultName = "" } = props;
+  const { children, onCreateTag, defaultName = "", ...restProps } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const actionText = defaultName ? "Rename" : "Create";
 
   return (
-    <Dialog>
+    <Dialog {...restProps}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>{actionText} tag</DialogHeader>
