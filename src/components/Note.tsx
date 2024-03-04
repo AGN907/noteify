@@ -16,7 +16,7 @@ import {
   PiStar,
   PiTrashSimple,
 } from "react-icons/pi";
-import NoteAssignFolderDialog from "./Dialogs/NoteAssignFolder";
+import { AssignFolderDialog } from "./Dialogs/";
 import ListItem from "./ListItem";
 import type { Item, MenuItem, Note } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
@@ -121,11 +121,11 @@ const menuItems = (
       key: "assign-to-folder",
       Icon: <PiFolder size={18} />,
       Component: ({ children }) => (
-        <NoteAssignFolderDialog selectedNote={item}>
+        <AssignFolderDialog selectedNote={item}>
           <ContextMenuItem onSelect={(e) => e.preventDefault()} inset>
             {children}
           </ContextMenuItem>
-        </NoteAssignFolderDialog>
+        </AssignFolderDialog>
       ),
     },
   ],

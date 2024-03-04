@@ -1,5 +1,15 @@
+import AssignFolderDialog from "./AssignFolder";
+import AssignTagDialog from "./AssignTag";
 import CreateFolderDialog from "./CreateFolder";
+import CreateTagDialog from "./CreateTag";
 import DeleteFolderDialog from "./DeleteFolder";
-import NoteAssignFolderDialog from "./NoteAssignFolder";
+import DeleteTagDialog from "./DeleteTag";
 
-export { CreateFolderDialog, DeleteFolderDialog, NoteAssignFolderDialog };
+export {
+  AssignFolderDialog,
+  AssignTagDialog,
+  CreateFolderDialog,
+  CreateTagDialog,
+  DeleteFolderDialog,
+  DeleteTagDialog,
+};

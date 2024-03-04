@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import CreateTagDialog from "@/components/Dialogs/CreateTag";
+import { CreateTagDialog } from "@/components/Dialogs";
 import ListItemContainer from "@/components/ListItemContainer";
 import TagItem from "@/components/TagItem";
 import { Button } from "@/components/ui/button";
