@@ -29,11 +29,3 @@ export type Tag = {
 export type Folder = {
   name: string;
 };
-
-export type MenuItem = {
-  key: string;
-  name: string;
-  Icon?: React.ReactNode;
-  danger?: boolean;
-  Component: React.ComponentType<{ children: React.ReactNode }>;
-};
