@@ -15,7 +15,7 @@ type AssignTagDialogProps = {
   onTagAssign: (name: string, isNew?: boolean) => void;
   onTagRemove: (tagId: string) => void;
   open?: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export default function AssignTagDialog(props: AssignTagDialogProps) {
@@ -48,7 +48,6 @@ export default function AssignTagDialog(props: AssignTagDialogProps) {
     : allTags.filter((tag) => !selectedTags.some((t) => t?.id === tag.id));
 
   const handleChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(e.key);
     if (tagName && e.key === "Enter") {
       onTagAssign(
         tagName,
@@ -60,24 +59,26 @@ export default function AssignTagDialog(props: AssignTagDialogProps) {
     }
   };
 
+  const renderTagsBadge = () =>
+    selectedTags?.map((tag) => {
+      if (!tag) return null;
+      return (
+        <TagBadge
+          key={tag?.id}
+          tag={tag}
+          onTagClick={() => onTagAssign(tag?.name)}
+          onTagDelete={() => onTagRemove(tag?.id)}
+        />
+      );
+    });
+
   return (
     <Dialog {...restProps}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>Assign tag</DialogHeader>
         <div className="relative flex flex-wrap gap-2 p-4">
-          {selectedTags?.map((tag) => (
-            <>
-              {tag ? (
-                <TagBadge
-                  key={tag.id}
-                  tag={tag}
-                  onTagClick={() => onTagAssign(tag?.name)}
-                  onTagDelete={() => onTagRemove(tag?.id)}
-                />
-              ) : null}
-            </>
-          ))}
+          {renderTagsBadge()}
           <Input
             ref={inputRef}
             name="Tag name"
