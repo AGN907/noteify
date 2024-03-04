@@ -1,5 +1,4 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import type { AppDispatch } from "@/app/store";
 import {
   duplicateNote,
   favouriteNote,
@@ -8,25 +7,29 @@ import {
   previewNote,
   selectNote,
 } from "@/redux/notes/notesSlice";
-import {
-  PiCopy,
-  PiFolder,
-  PiPencilSlash,
-  PiPushPinSimple,
-  PiStar,
-  PiTrashSimple,
-} from "react-icons/pi";
+import { useState } from "react";
+import { PiDotsThree, PiPushPinSimple, PiStar } from "react-icons/pi";
 import { AssignFolderDialog } from "./Dialogs/";
 import ListItem from "./ListItem";
-import type { Item, MenuItem, Note } from "./ListItem/types";
+import type { Item, Note } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
-import { ContextMenuCheckboxItem, ContextMenuItem } from "./ui/context-menu";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+
 interface NoteProps {
   note: Item<Note>;
 }
 
 export default function Note(props: NoteProps) {
   const { note } = props;
+  const [openDialog, setOpenDialog] = useState(false);
 
   const { selectedNoteId } = useAppSelector((state) => state.notes);
   const dispatch = useAppDispatch();
@@ -36,8 +39,64 @@ export default function Note(props: NoteProps) {
   return (
     <ListItem
       item={note}
-      title={note.title}
-      body={<div></div>}
+      title={
+        <div className="flex justify-between">
+          <span className="mr-auto">{note.title}</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <PiDotsThree size={20} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuCheckboxItem
+                  onSelect={() => dispatch(pinNote(note.id))}
+                  checked={note.isPinned}
+                >
+                  Pinned
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  onSelect={() => dispatch(favouriteNote(note.id))}
+                  checked={note.isFavourite}
+                >
+                  Favourite
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  onSelect={() => dispatch(previewNote(note.id))}
+                  checked={note.readonly}
+                >
+                  Read Only
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onSelect={() => dispatch(duplicateNote(note.id))}
+                >
+                  Duplicate
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setOpenDialog(true)}>
+                  Assign to folder
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onSelect={() => dispatch(moveNoteToTrash(note.id))}
+                >
+                  <span className="text-red-500">Move to trash</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <AssignFolderDialog
+            open={openDialog}
+            onOpenChange={setOpenDialog}
+            selectedNote={note}
+          >
+            <span></span>
+          </AssignFolderDialog>
+        </div>
+      }
       footer={
         <div className="flex items-center justify-between pt-4">
           <div className="flex gap-2">
@@ -51,98 +110,6 @@ export default function Note(props: NoteProps) {
       }
       onItemClick={() => dispatch(selectNote(note.id))}
       isSelected={isSelected}
-      contextMenuItems={() => menuItems(note, dispatch)}
     />
   );
 }
-
-const menuItems = (
-  item: Item<Note>,
-  dispatch: AppDispatch,
-): Array<MenuItem | MenuItem[]> => [
-  [
-    {
-      name: "Pin",
-      key: "pin",
-      Icon: <PiPushPinSimple size={18} />,
-      Component: ({ children }) => (
-        <ContextMenuCheckboxItem
-          checked={item.isPinned}
-          onSelect={() => dispatch(pinNote(item.id))}
-        >
-          {children}
-        </ContextMenuCheckboxItem>
-      ),
-    },
-    {
-      name: "Favorite",
-      key: "favorite",
-      Icon: <PiStar size={18} />,
-      Component: ({ children }) => (
-        <ContextMenuCheckboxItem
-          checked={item.isFavourite}
-          onSelect={() => dispatch(favouriteNote(item.id))}
-        >
-          {children}
-        </ContextMenuCheckboxItem>
-      ),
-    },
-    {
-      name: "Readonly",
-      key: "readonly",
-      Icon: <PiPencilSlash size={18} />,
-      Component: ({ children }) => (
-        <ContextMenuCheckboxItem
-          checked={item.readonly}
-          onSelect={() => dispatch(previewNote(item.id))}
-        >
-          {children}
-        </ContextMenuCheckboxItem>
-      ),
-    },
-  ],
-
-  [
-    {
-      name: "Duplicate",
-      key: "duplicate",
-      Icon: <PiCopy size={18} />,
-      Component: ({ children }) => (
-        <ContextMenuItem
-          inset
-          onSelect={() => dispatch(duplicateNote(item.id))}
-        >
-          {children}
-        </ContextMenuItem>
-      ),
-    },
-    {
-      name: "Assign to folder",
-      key: "assign-to-folder",
-      Icon: <PiFolder size={18} />,
-      Component: ({ children }) => (
-        <AssignFolderDialog selectedNote={item}>
-          <ContextMenuItem onSelect={(e) => e.preventDefault()} inset>
-            {children}
-          </ContextMenuItem>
-        </AssignFolderDialog>
-      ),
-    },
-  ],
-  {
-    name: "Move to trash",
-    key: "trash",
-    Icon: <PiTrashSimple size={18} />,
-    danger: true,
-    Component: ({ children }) => (
-      <ContextMenuItem
-        inset
-        onSelect={() => {
-          dispatch(moveNoteToTrash(item.id));
-        }}
-      >
-        {children}
-      </ContextMenuItem>
-    ),
-  },
-];

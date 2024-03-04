@@ -1,12 +1,19 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import type { AppDispatch } from "@/app/store";
 import { trashTagNotes } from "@/redux/notes/notesSlice";
 import { removeTag, updateTag } from "@/redux/tags/tagsSlice";
-import { PiPencilSimple } from "react-icons/pi";
+import { useState } from "react";
+import { PiDotsThree } from "react-icons/pi";
 import { CreateTagDialog, DeleteTagDialog } from "./Dialogs";
 import ListItem from "./ListItem";
-import type { Item, MenuItem, Tag } from "./ListItem/types";
-import { ContextMenuItem } from "./ui/context-menu";
+import type { Item, Tag } from "./ListItem/types";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 type TagItemProps = {
   tag: Item<Tag>;
@@ -15,10 +22,11 @@ type TagItemProps = {
 
 export default function TagItem(props: TagItemProps) {
   const { tag, handleTagClick } = props;
+  const [selectedDialog, setSelectedDialog] = useState("");
 
   const { notes } = useAppSelector((state) => state.notes);
 
-  const tagNotes = Object.values(notes).filter(
+  const tagNotes = notes.filter(
     (note) => note.tags.includes(tag.id) && note.type === "note",
   );
 
@@ -28,65 +36,57 @@ export default function TagItem(props: TagItemProps) {
     <ListItem
       item={tag}
       title={
-        <div className="flex justify-between">
-          <p>{tag.name}</p>
-
-          <span>{tagNotes.length}</span>
+        <div className="relative flex justify-between">
+          <span className="mr-auto">{tag.name}</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <PiDotsThree className="absolute right-2 top-2 z-20" size={20} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuItem onSelect={handleTagClick}>
+                  View tag
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setSelectedDialog("edit")}>
+                  Edit name
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onSelect={() => setSelectedDialog("delete")}>
+                  <span className="text-red-500">Delete</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <CreateTagDialog
+            open={selectedDialog === "edit"}
+            onOpenChange={(open) => setSelectedDialog(open ? "edit" : "")}
+            onCreateTag={(name) => {
+              dispatch(updateTag({ id: tag.id, name: name }));
+            }}
+            defaultName={tag.name}
+          />
+          <DeleteTagDialog
+            open={selectedDialog === "delete"}
+            onOpenChange={(open) => setSelectedDialog(open ? "delete" : "")}
+            onDeleteTag={(deleteAllNotes) => {
+              if (deleteAllNotes) {
+                dispatch(trashTagNotes(tag.id));
+              }
+              dispatch(removeTag(tag.id));
+            }}
+          />
         </div>
       }
-      body={""}
-      footer={""}
+      footer={
+        <div>
+          {tagNotes.length === 0
+            ? "No notes"
+            : `${tagNotes.length} ${tagNotes.length === 1 ? "note" : "notes"}`}
+        </div>
+      }
       isSelected={false}
-      onItemClick={handleTagClick}
-      contextMenuItems={() => menuItems(tag, dispatch)}
     />
   );
 }
-
-const menuItems = (
-  tag: Item<Tag>,
-  dispatch: AppDispatch,
-): Array<MenuItem | MenuItem[]> => [
-  [
-    {
-      name: "Rename",
-      key: "rename",
-      Icon: <PiPencilSimple size={18} />,
-      Component: ({ children }) => (
-        <CreateTagDialog
-          onCreateTag={(name) => {
-            if (!name) return;
-            dispatch(updateTag({ id: tag.id, name }));
-          }}
-          defaultName={tag.name}
-        >
-          <ContextMenuItem inset onSelect={(e) => e.preventDefault()}>
-            {children}
-          </ContextMenuItem>
-        </CreateTagDialog>
-      ),
-    },
-  ],
-  {
-    name: "Delete",
-    key: "delete",
-    Icon: <PiPencilSimple size={18} />,
-    danger: true,
-    Component: ({ children }) => (
-      <DeleteTagDialog
-        onDeleteTag={(deleteAllNotes) => {
-          console.log(deleteAllNotes);
-          if (deleteAllNotes) {
-            dispatch(trashTagNotes(tag.id));
-          }
-
-          dispatch(removeTag(tag.id));
-        }}
-      >
-        <ContextMenuItem inset onSelect={(e) => e.preventDefault()}>
-          {children}
-        </ContextMenuItem>
-      </DeleteTagDialog>
-    ),
-  },
-];

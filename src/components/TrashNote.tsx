@@ -1,15 +1,21 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { AppDispatch } from "@/app/store";
 import {
   permaDeleteNote,
   restoreNoteFromTrash,
   selectNote,
 } from "@/redux/notes/notesSlice";
-import { PiRecycle, PiTrash } from "react-icons/pi";
+import { PiDotsThree } from "react-icons/pi";
 import ListItem from "./ListItem";
-import type { Item, MenuItem, Note } from "./ListItem/types";
+import type { Item, Note } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
-import { ContextMenuItem } from "./ui/context-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 interface TrashNoteProps {
   note: Item<Note>;
@@ -25,8 +31,33 @@ export default function TrashNote(props: TrashNoteProps) {
   return (
     <ListItem
       item={note}
-      title={note.title}
-      body={<div></div>}
+      title={
+        <div className="flex justify-between">
+          <span className="mr-auto">{note.title}</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <PiDotsThree size={20} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onSelect={() => dispatch(restoreNoteFromTrash(note.id))}
+                >
+                  Restore note
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onSelect={() => dispatch(permaDeleteNote(note.id))}
+                >
+                  <span className="text-red-500">Delete forever</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      }
       footer={
         <div className="ml-auto">
           <TimeAgo timestamp={note.deletedAt} />
@@ -34,40 +65,6 @@ export default function TrashNote(props: TrashNoteProps) {
       }
       isSelected={isSelected}
       onItemClick={() => dispatch(selectNote(note.id))}
-      contextMenuItems={() => menuItems(note, dispatch)}
     />
   );
 }
-
-const menuItems = (
-  note: Item<Note>,
-  dispatch: AppDispatch,
-): Array<MenuItem | MenuItem[]> => [
-  {
-    name: "Restore",
-    key: "restore",
-    Icon: <PiRecycle size={18} />,
-    Component: ({ children }) => (
-      <ContextMenuItem
-        inset
-        onSelect={() => dispatch(restoreNoteFromTrash(note.id))}
-      >
-        {children}
-      </ContextMenuItem>
-    ),
-  },
-  {
-    name: "Delete forever",
-    key: "delete",
-    Icon: <PiTrash size={18} />,
-    danger: true,
-    Component: ({ children }) => (
-      <ContextMenuItem
-        inset
-        onSelect={() => dispatch(permaDeleteNote(note.id))}
-      >
-        {children}
-      </ContextMenuItem>
-    ),
-  },
-];
