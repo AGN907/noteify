@@ -5,9 +5,7 @@ import TrashNote from "@/components/TrashNote";
 export default function Trash() {
   const { notes } = useAppSelector((state) => state.notes);
 
-  const trashNotes = Object.values(notes).filter(
-    (note) => note.type === "trash",
-  );
+  const trashNotes = notes.filter((note) => note.type === "trash");
 
   return (
     <div>

@@ -18,7 +18,7 @@ export default function Root() {
 
   const { isFoldersLoading } = useAppSelector((state) => state.folders);
 
-  const selectedNote = notes[selectedNoteId ?? ""];
+  const selectedNote = notes.find((n) => n.id === selectedNoteId);
 
   const debouncedUpdateNote = debounce(
     ({

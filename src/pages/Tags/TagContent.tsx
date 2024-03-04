@@ -23,7 +23,7 @@ export default function TagContent() {
 
   const selectedTag = tags.find((t) => t.id === tagId);
 
-  const tagNotes = Object.values(notes).filter(
+  const tagNotes = notes.filter(
     (note) => note.tags.includes(tagId) && note.type === "note",
   );
 

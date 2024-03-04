@@ -5,7 +5,6 @@ import { Badge } from "../ui/badge";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTrigger,
 } from "../ui/dialog";
@@ -23,14 +22,16 @@ export default function AssignTagDialog(props: AssignTagDialogProps) {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const allTags = useAppSelector((state) => state.tags.tags);
+  const { tags: allTags } = useAppSelector((state) => state.tags);
   const { selectedNoteId, notes } = useAppSelector((state) => state.notes);
 
   if (!selectedNoteId) return null;
 
-  const selectedNote = notes[selectedNoteId];
+  const selectedNote = notes.find((n) => n.id === selectedNoteId);
 
-  const selectedTags = selectedNote.tags.map((tagId) =>
+  if (!selectedNote) return null;
+
+  const selectedTags = selectedNote?.tags.map((tagId) =>
     allTags.find((t) => t.id === tagId),
   );
 
@@ -63,10 +64,11 @@ export default function AssignTagDialog(props: AssignTagDialogProps) {
       <DialogContent>
         <DialogHeader>Assign tag</DialogHeader>
         <div className="relative flex flex-wrap gap-2 p-4">
-          {selectedTags.map((tag) => (
+          {selectedTags?.map((tag) => (
             <>
               {tag ? (
                 <TagBadge
+                  key={tag.id}
                   tag={tag}
                   onTagClick={() => onTagAssign(tag?.name)}
                   onTagDelete={() => onTagRemove(tag?.id)}
@@ -84,8 +86,9 @@ export default function AssignTagDialog(props: AssignTagDialogProps) {
             className="focus-visible:ring-0 focus-visible:ring-transparent"
           />
           <div className="mt-4 flex w-full flex-wrap gap-2">
-            {filteredTags.map((tag) => (
+            {filteredTags?.map((tag) => (
               <Badge
+                key={tag.id}
                 className="cursor-pointer"
                 onClick={() => onTagAssign(tag.id, false)}
               >
@@ -94,7 +97,6 @@ export default function AssignTagDialog(props: AssignTagDialogProps) {
             ))}
           </div>
         </div>
-        <DialogFooter></DialogFooter>
       </DialogContent>
     </Dialog>
   );

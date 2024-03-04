@@ -3,7 +3,7 @@ import { addTagToNote, removeTagFromNote } from "@/redux/notes/notesSlice";
 import { addTag } from "@/redux/tags/tagsSlice";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import AssignTagDialog from "../Dialogs/AssignTag";
+import { AssignTagDialog } from "../Dialogs/";
 import type { Item, Tag } from "../ListItem/types";
 import TagBadge from "../TagBadge";
 import { Badge } from "../ui/badge";
@@ -15,9 +15,11 @@ export default function TagsPanel() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const selectedNote = notes[selectedNoteId ?? ""];
+  const selectedNote = notes?.find((n) => n.id === selectedNoteId);
 
-  const selectedNoteTags = selectedNote.tags
+  if (!selectedNote) return null;
+
+  const selectedNoteTags = selectedNote?.tags
     .map((tag) => tags.find((t) => t.id === tag))
     .filter((tag) => tag !== undefined);
 

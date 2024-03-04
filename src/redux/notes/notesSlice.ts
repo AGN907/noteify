@@ -27,22 +27,24 @@ startAppListening({
       await storage.db.remove(action.payload as string);
     }
 
-    const notesState: Record<string, Item<Note>> = api.getState().notes.notes;
-    storage.db.set("notes", Object.keys(notesState));
+    const notesState: Item<Note>[] = api.getState().notes.notes;
+    storage.db.set(
+      "notes",
+      notesState.map((note) => note.id),
+    );
 
-    const notes = Object.values(notesState);
-    await Promise.all(notes.map((note) => storage.db.set(note.id, note)));
+    await Promise.all(notesState.map((note) => storage.db.set(note.id, note)));
   },
 });
 
 export type initialState = {
-  notes: Record<string, Item<Note>>;
+  notes: Item<Note>[];
   selectedNoteId: string | null;
   isNotesLoading: boolean;
 };
 
 const initialState: initialState = {
-  notes: {},
+  notes: [],
   selectedNoteId: null,
   isNotesLoading: true,
 };
@@ -53,15 +55,12 @@ export const loadNotes = createAsyncThunk("notes/loadNotes", async () => {
     notesIds.map((id) => storage.db.get<Item<Note>>(id)),
   );
 
-  return notes.reduce(
-    (acc, note) => {
-      if (note) {
-        acc[note.id] = note;
-      }
-      return acc;
-    },
-    {} as Record<string, Item<Note>>,
-  );
+  return notes.reduce((acc, note) => {
+    if (note) {
+      acc.push(note);
+    }
+    return acc;
+  }, [] as Item<Note>[]);
 });
 
 export const notesSlice = createSlice({
@@ -86,7 +85,7 @@ export const notesSlice = createSlice({
         tags: [],
       };
 
-      state.notes[note.id] = note;
+      state.notes.push(note);
 
       toast.success("Note was created successfully");
 
@@ -98,11 +97,13 @@ export const notesSlice = createSlice({
     ) => {
       if (!state.selectedNoteId) return;
 
-      const note = state.notes[state.selectedNoteId];
+      const noteIndex = state.notes?.findIndex(
+        (n) => n.id === state.selectedNoteId,
+      );
 
-      if (note) {
-        state.notes[note.id] = {
-          ...note,
+      if (noteIndex !== -1) {
+        state.notes[noteIndex] = {
+          ...state.notes[noteIndex],
           title: action.payload.title,
           content: action.payload.content,
           updatedAt: Date.now(),
@@ -114,7 +115,7 @@ export const notesSlice = createSlice({
     },
 
     pinNote: (state, action: PayloadAction<string>) => {
-      const note = state.notes[action.payload];
+      const note = state.notes.find((n) => n.id === action.payload);
 
       if (note) {
         note.isPinned = !note.isPinned;
@@ -128,7 +129,7 @@ export const notesSlice = createSlice({
     },
 
     favouriteNote: (state, action: PayloadAction<string>) => {
-      const note = state.notes[action.payload];
+      const note = state.notes.find((n) => n.id === action.payload);
 
       if (note) {
         note.isFavourite = !note.isFavourite;
@@ -141,13 +142,14 @@ export const notesSlice = createSlice({
       }
     },
     duplicateNote: (state, action: PayloadAction<string>) => {
-      const note = state.notes[action.payload];
+      const noteIndex = state.notes.findIndex((n) => n.id === action.payload);
 
       const id = uuid();
       const currentTimestamp = Date.now();
 
-      if (note) {
-        state.notes[id] = {
+      if (noteIndex !== -1) {
+        const note = state.notes[noteIndex];
+        state.notes.push({
           type: "note",
           id,
           title: `${note.title}`,
@@ -160,7 +162,7 @@ export const notesSlice = createSlice({
           deletedAt: 0,
           folderId: "",
           tags: [],
-        };
+        });
 
         toast.success("Note was duplicated successfully");
       }
@@ -174,9 +176,10 @@ export const notesSlice = createSlice({
       }
 
       noteIds.forEach((noteId) => {
-        const note = state.notes[noteId];
-        if (note) {
-          state.notes[noteId] = {
+        const noteIndex = state.notes.findIndex((n) => n.id === noteId);
+        if (noteIndex !== -1) {
+          const note = state.notes[noteIndex];
+          state.notes[noteIndex] = {
             ...note,
             type: "trash",
             deletedAt: Date.now(),
@@ -190,13 +193,13 @@ export const notesSlice = createSlice({
       }
     },
     previewNote: (state, action: PayloadAction<string>) => {
-      const note = state.notes[action.payload];
+      const note = state.notes.find((n) => n.id === action.payload);
       if (note) {
         note.readonly = !note.readonly;
       }
     },
     restoreNoteFromTrash: (state, action: PayloadAction<string>) => {
-      const note = state.notes[action.payload];
+      const note = state.notes.find((n) => n.id === action.payload);
       if (note && note.type === "trash") {
         note.type = "note";
         note.readonly = false;
@@ -206,7 +209,7 @@ export const notesSlice = createSlice({
       }
     },
     permaDeleteNote: (state, action: PayloadAction<string>) => {
-      delete state.notes[action.payload];
+      state.notes = state.notes.filter((n) => n.id !== action.payload);
       if (state.selectedNoteId === action.payload) {
         state.selectedNoteId = null;
       }
@@ -216,31 +219,24 @@ export const notesSlice = createSlice({
       action: PayloadAction<{ noteId: string; folderId: string }>,
     ) => {
       const { noteId, folderId } = action.payload;
-      const note = state.notes[noteId];
+      const note = state.notes.find((n) => n.id === noteId);
       if (note) {
-        state.notes[noteId] = {
-          ...note,
-          folderId,
-        };
+        note.folderId = folderId;
       }
     },
     removeNoteFromFolder: (state, action: PayloadAction<string>) => {
-      const note = state.notes[action.payload];
+      const note = state.notes.find((n) => n.id === action.payload);
       if (note) {
-        state.notes[note.id] = {
-          ...note,
-          folderId: "",
-        };
+        note.folderId = "";
       }
     },
     trashFolderNotes: (state, action: PayloadAction<string>) => {
       const folderId = action.payload;
-      const notes = Object.values(state.notes).filter(
-        (note) => note.folderId === folderId,
-      );
+      const notes = state.notes.filter((note) => note.folderId === folderId);
 
       notes.forEach((note) => {
-        state.notes[note.id] = {
+        const noteIndex = state.notes.findIndex((n) => n.id === note.id);
+        state.notes[noteIndex] = {
           ...note,
           type: "trash",
           readonly: true,
@@ -256,10 +252,11 @@ export const notesSlice = createSlice({
       action: PayloadAction<{ noteId: string; tagId: string }>,
     ) => {
       const { noteId, tagId } = action.payload;
-      const note = state.notes[noteId];
+      const noteIndex = state.notes.findIndex((n) => n.id === noteId);
 
-      if (note) {
-        state.notes[noteId] = {
+      if (noteIndex !== -1) {
+        const note = state.notes[noteIndex];
+        state.notes[noteIndex] = {
           ...note,
           tags: [...note.tags, tagId],
         };
@@ -270,10 +267,11 @@ export const notesSlice = createSlice({
       action: PayloadAction<{ noteId: string; tagId: string }>,
     ) => {
       const { noteId, tagId } = action.payload;
-      const note = state.notes[noteId];
+      const noteIndex = state.notes.findIndex((n) => n.id === noteId);
 
-      if (note) {
-        state.notes[noteId] = {
+      if (noteIndex !== -1) {
+        const note = state.notes[noteIndex];
+        state.notes[noteIndex] = {
           ...note,
           tags: note.tags.filter((tag) => tag !== tagId),
         };
@@ -287,10 +285,14 @@ export const notesSlice = createSlice({
       );
 
       notes.forEach((note) => {
-        note.type = "trash";
-        note.deletedAt = Date.now();
-        note.readonly = true;
-        note.tags = note.tags.filter((t) => t !== tagId);
+        const noteIndex = state.notes.findIndex((n) => n.id === note.id);
+        state.notes[noteIndex] = {
+          ...note,
+          type: "trash",
+          deletedAt: Date.now(),
+          readonly: true,
+          tags: note.tags.filter((t) => t !== tagId),
+        };
       });
 
       toast.success(`${notes.length} notes were moved to trash`);

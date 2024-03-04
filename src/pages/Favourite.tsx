@@ -5,9 +5,7 @@ import Note from "@/components/Note";
 export default function Favourite() {
   const { notes } = useAppSelector((state) => state.notes);
 
-  const favouriteNotes = Object.values(notes).filter(
-    (note) => note.isFavourite,
-  );
+  const favouriteNotes = notes.filter((note) => note.isFavourite);
 
   return (
     <div>

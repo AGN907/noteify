@@ -28,7 +28,7 @@ export default function FolderContent() {
 
   const selectedFolder = folders[folderId];
 
-  const folderNotes = Object.values(notes).filter(
+  const folderNotes = notes.filter(
     (note) => note.folderId === folderId && note.type === "note",
   );
 
