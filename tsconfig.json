@@ -6,10 +6,8 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "baseUrl": ".",
-    "paths": { 
-      "@/*": [
-        "./src/*"
-      ]
+    "paths": {
+      "@/*": ["./src/*"],
     },
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -23,8 +21,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "types": ["vitest/globals"],
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
 }
