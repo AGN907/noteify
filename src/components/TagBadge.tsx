@@ -14,7 +14,7 @@ export default function TagBadge(props: TagBadgeProps) {
   if (!tag) return null;
 
   return (
-    <div className="relative">
+    <div className="relative" aria-label={tag.name + " tag"}>
       <Badge
         onClick={onTagClick}
         variant="outline"
@@ -23,6 +23,7 @@ export default function TagBadge(props: TagBadgeProps) {
         {tag.name}
       </Badge>
       <PiX
+        aria-label="Remove tag"
         size={12}
         onClick={onTagDelete}
         className="absolute right-1 top-2 cursor-pointer"
