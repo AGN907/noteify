@@ -3,9 +3,10 @@ import { trashTagNotes } from "@/redux/notes/notesSlice";
 import { removeTag, updateTag } from "@/redux/tags/tagsSlice";
 import { useState } from "react";
 import { PiDotsThree } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
 import { CreateTagDialog, DeleteTagDialog } from "./Dialogs";
 import ListItem from "./ListItem";
-import type { Item, Tag } from "./ListItem/types";
+import type { Item } from "./ListItem/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,28 +17,32 @@ import {
 } from "./ui/dropdown-menu";
 
 type TagItemProps = {
-  tag: Item<Tag>;
-  handleTagClick: () => void;
+  item: Item<"tag">;
 };
 
 export default function TagItem(props: TagItemProps) {
-  const { tag, handleTagClick } = props;
+  const { item } = props;
   const [selectedDialog, setSelectedDialog] = useState("");
+  const navigate = useNavigate();
 
   const { notes } = useAppSelector((state) => state.notes);
 
   const tagNotes = notes.filter(
-    (note) => note.tags.includes(tag.id) && note.type === "note",
+    (note) => note.tags.includes(item.id) && note.type === "note",
   );
 
   const dispatch = useAppDispatch();
 
+  const handleTagClick = () => {
+    navigate("tags/" + item.id);
+  };
+
   return (
     <ListItem
-      item={tag}
+      item={item}
       title={
         <div className="relative flex justify-between">
-          <span className="mr-auto">{tag.name}</span>
+          <span className="mr-auto">{item.name}</span>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <PiDotsThree className="absolute right-2 top-2 z-20" size={20} />
@@ -63,18 +68,18 @@ export default function TagItem(props: TagItemProps) {
             open={selectedDialog === "edit"}
             onOpenChange={(open) => setSelectedDialog(open ? "edit" : "")}
             onCreateTag={(name) => {
-              dispatch(updateTag({ id: tag.id, name: name }));
+              dispatch(updateTag({ id: item.id, name: name }));
             }}
-            defaultName={tag.name}
+            defaultName={item.name}
           />
           <DeleteTagDialog
             open={selectedDialog === "delete"}
             onOpenChange={(open) => setSelectedDialog(open ? "delete" : "")}
             onDeleteTag={(deleteAllNotes) => {
               if (deleteAllNotes) {
-                dispatch(trashTagNotes(tag.id));
+                dispatch(trashTagNotes(item.id));
               }
-              dispatch(removeTag(tag.id));
+              dispatch(removeTag(item.id));
             }}
           />
         </div>

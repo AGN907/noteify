@@ -1,26 +1,19 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { CreateTagDialog } from "@/components/Dialogs";
 import ListItemContainer from "@/components/ListItemContainer";
-import TagItem from "@/components/TagItem";
 import { Button } from "@/components/ui/button";
 import { addTag } from "@/redux/tags/tagsSlice";
 import { PiHash } from "react-icons/pi";
-import { useNavigate } from "react-router-dom";
 
 export default function TagsList() {
   const { tags } = useAppSelector((state) => state.tags);
 
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const handleTagCreate = (name: string) => {
     if (!name) return;
 
     dispatch(addTag({ name }));
-  };
-
-  const handleTagClick = (id: string) => {
-    navigate(`/tags/${id}`);
   };
 
   return (
@@ -39,12 +32,7 @@ export default function TagsList() {
             <p>No tags yet</p>
           </div>
         )}
-        <ListItemContainer
-          items={tags}
-          renderItem={(tag) => (
-            <TagItem tag={tag} handleTagClick={() => handleTagClick(tag.id)} />
-          )}
-        />
+        <ListItemContainer type="tag" items={tags} />
       </div>
     </div>
   );
