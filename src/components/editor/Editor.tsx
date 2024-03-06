@@ -1,30 +1,29 @@
 import { useAppDispatch } from "@/app/hooks";
 import { selectNote } from "@/redux/notes/notesSlice";
-import {
-  EditorContent,
-  generateText,
-  useEditor,
-  type JSONContent,
-} from "@tiptap/react";
+import { EditorContent, useEditor, type JSONContent } from "@tiptap/react";
+import { useRef } from "react";
 import { PiArrowLeft } from "react-icons/pi";
-import type { Item, Note } from "../ListItem/types";
+import type { Item } from "../ListItem/types";
 import TagsPanel from "../TagPanel";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import EditorToolbar, { extensions } from "./EditorToolbar";
 
 interface EditorProps {
-  note: Item<Note>;
+  note: Item<"note">;
   onChange: ({
     title,
     content,
   }: {
-    title: string | undefined;
-    content: JSONContent;
+    title?: string;
+    content?: JSONContent;
   }) => void;
 }
 
 export default function Editor(props: EditorProps) {
   const { note, onChange } = props;
+
+  const titleRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useAppDispatch();
 
@@ -37,18 +36,14 @@ export default function Editor(props: EditorProps) {
       editable,
 
       onUpdate: ({ editor }) => {
-        const editorContent = editor.getJSON();
-        const title = editorContent.content?.[0];
-
         onChange({
-          title: title && generateText(title, extensions),
           content: editor.getJSON(),
         });
       },
       editorProps: {
         attributes: {
           class:
-            "prose-md prose prose-sm flex w-full max-w-4xl flex-1 flex-col px-4 dark:prose-invert lg:prose-lg xl:prose-lg focus:outline-none prose-code:rounded-md prose-code:bg-slate-300 prose-code:text-slate-900 prose-pre:rounded-md prose-pre:bg-slate-300 prose-pre:p-2 prose-code:dark:bg-neutral-800 prose-code:dark:text-slate-100 prose-pre:dark:bg-neutral-800",
+            "prose prose-md  flex w-full max-w-4xl flex-1 flex-col dark:prose-invert focus:outline-none prose-code:rounded-md prose-code:bg-slate-300 prose-code:text-slate-900 prose-pre:rounded-md prose-pre:bg-slate-300 prose-pre:p-2 prose-code:dark:bg-neutral-800 prose-code:dark:text-slate-100 prose-pre:dark:bg-neutral-800",
         },
       },
     },
@@ -78,8 +73,23 @@ export default function Editor(props: EditorProps) {
           <EditorToolbar editor={editor} />
         </div>
         <TagsPanel />
+        <div className="flex flex-col gap-y-4 px-10 pt-2">
+          <Input
+            ref={titleRef}
+            type="text"
+            defaultValue={note.title}
+            onChange={() =>
+              onChange({
+                title: titleRef.current?.value,
+              })
+            }
+            className="border-none text-4xl font-semibold focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent"
+          />
+          <hr className="border-b-0 border-slate-300" />
+        </div>
+
         <div className="flex flex-1 flex-col overflow-auto pt-2 md:px-10">
-          <EditorContent editor={editor} className="flex w-full pb-4" />
+          <EditorContent editor={editor} className="flex w-full pb-4 pt-2" />
         </div>
       </div>
     </div>

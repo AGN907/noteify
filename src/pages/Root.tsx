@@ -21,13 +21,10 @@ export default function Root() {
   const selectedNote = notes.find((n) => n.id === selectedNoteId);
 
   const debouncedUpdateNote = debounce(
-    ({
-      title = "",
-      content,
-    }: {
-      title: string | undefined;
-      content: JSONContent;
-    }) => dispatch(updateNote({ title, content })),
+    ({ title, content }: { title?: string; content?: JSONContent }) => {
+      console.log(title);
+      dispatch(updateNote({ title, content }));
+    },
     700,
   );
 
@@ -70,7 +67,7 @@ export default function Root() {
       >
         {selectedNote ? (
           <Editor
-            onChange={({ title = "New Note", content }) =>
+            onChange={({ title, content }) =>
               debouncedUpdateNote({ title, content })
             }
             note={selectedNote}

@@ -1,5 +1,5 @@
 import { startAppListening } from "@/app/middleware";
-import type { Item, Note } from "@/components/ListItem/types";
+import type { Item } from "@/components/ListItem/types";
 import storage from "@/lib/db";
 import {
   createAsyncThunk,
@@ -27,7 +27,7 @@ startAppListening({
       await storage.db.remove(action.payload as string);
     }
 
-    const notesState: Item<Note>[] = api.getState().notes.notes;
+    const notesState: Item<"note">[] = api.getState().notes.notes;
     storage.db.set(
       "notes",
       notesState.map((note) => note.id),
@@ -38,7 +38,7 @@ startAppListening({
 });
 
 export type initialState = {
-  notes: Item<Note>[];
+  notes: Item<"note">[];
   selectedNoteId: string | null;
   isNotesLoading: boolean;
 };
@@ -52,7 +52,7 @@ const initialState: initialState = {
 export const loadNotes = createAsyncThunk("notes/loadNotes", async () => {
   const notesIds = (await storage.db.get<string[]>("notes")) ?? [];
   const notes = await Promise.all(
-    notesIds.map((id) => storage.db.get<Item<Note>>(id)),
+    notesIds.map((id) => storage.db.get<Item<"note">>(id)),
   );
 
   return notes.reduce((acc, note) => {
@@ -60,7 +60,7 @@ export const loadNotes = createAsyncThunk("notes/loadNotes", async () => {
       acc.push(note);
     }
     return acc;
-  }, [] as Item<Note>[]);
+  }, [] as Item<"note">[]);
 });
 
 export const notesSlice = createSlice({
@@ -73,7 +73,7 @@ export const notesSlice = createSlice({
       const note = {
         id: uuid(),
         title: "New Note",
-        content: "<h1>New Note</h1>",
+        content: "",
         createdAt: Date.now(),
         updatedAt: Date.now(),
         deletedAt: 0,
@@ -93,7 +93,7 @@ export const notesSlice = createSlice({
     },
     updateNote: (
       state,
-      action: PayloadAction<{ title: string; content: Content }>,
+      action: PayloadAction<{ title?: string; content?: Content }>,
     ) => {
       if (!state.selectedNoteId) return;
 
@@ -104,8 +104,8 @@ export const notesSlice = createSlice({
       if (noteIndex !== -1) {
         state.notes[noteIndex] = {
           ...state.notes[noteIndex],
-          title: action.payload.title,
-          content: action.payload.content,
+          title: action.payload.title ?? state.notes[noteIndex].title,
+          content: action.payload.content ?? state.notes[noteIndex].content,
           updatedAt: Date.now(),
         };
       }
@@ -152,7 +152,7 @@ export const notesSlice = createSlice({
         state.notes.push({
           type: "note",
           id,
-          title: `${note.title}`,
+          title: `${note.title} - Copy`,
           content: note.content,
           isFavourite: false,
           isPinned: false,
@@ -300,7 +300,7 @@ export const notesSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(loadNotes.fulfilled, (state, action) => {
-      state.notes = action.payload;
+      state.notes = [...action.payload];
       state.isNotesLoading = false;
     });
   },
