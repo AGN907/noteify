@@ -1,5 +1,5 @@
 import { startAppListening } from "@/app/middleware";
-import type { Item, Tag } from "@/components/ListItem/types";
+import type { Item } from "@/components/ListItem/types";
 import storage from "@/lib/db";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "sonner";
@@ -23,7 +23,7 @@ startAppListening({
       return;
     }
 
-    const tagsState: Item<Tag>[] = api.getState().tags.tags;
+    const tagsState: Item<"tag">[] = api.getState().tags.tags;
 
     await storage.db.set(
       "tags",
@@ -35,14 +35,14 @@ startAppListening({
 });
 
 type initialState = {
-  tags: Item<Tag>[];
+  tags: Item<"tag">[];
 };
 
 export const loadTags = createAsyncThunk("tags/loadTags", async () => {
   const tagsKey = await storage.db.get<string[]>("tags");
   if (!tagsKey) return [];
 
-  const tags = await storage.db.getAll<Item<Tag>>(tagsKey);
+  const tags = await storage.db.getAll<Item<"tag">>(tagsKey);
   if (tags) return tags;
 
   return [];

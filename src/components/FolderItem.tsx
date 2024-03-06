@@ -6,7 +6,7 @@ import { PiDotsThree } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { CreateFolderDialog, DeleteFolderDialog } from "./Dialogs/";
 import ListItem from "./ListItem";
-import type { Folder, Item } from "./ListItem/types";
+import type { Item } from "./ListItem/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,11 +17,11 @@ import {
 } from "./ui/dropdown-menu";
 
 type FolderItemProps = {
-  folder: Item<Folder>;
+  item: Item<"folder">;
 };
 
 export default function FolderItem(props: FolderItemProps) {
-  const { folder } = props;
+  const { item } = props;
   const [selectedDialog, setSelectedDialog] = useState("");
 
   const { notes } = useAppSelector((state) => state.notes);
@@ -30,19 +30,19 @@ export default function FolderItem(props: FolderItemProps) {
   const navigate = useNavigate();
 
   const folderNotes = Object.values(notes).filter(
-    (note) => note.folderId === folder.id && note.type === "note",
+    (note) => note.folderId === item.id && note.type === "note",
   );
 
   const handleSelectFolder = () => {
-    navigate(`/folders/${folder.id}`);
+    navigate(`/folders/${item.id}`);
   };
 
   return (
     <ListItem
-      item={folder}
+      item={item}
       title={
         <div className="flex justify-between">
-          <span className="mr-auto">{folder.name}</span>
+          <span className="mr-auto">{item.name}</span>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <PiDotsThree size={20} />
@@ -53,10 +53,7 @@ export default function FolderItem(props: FolderItemProps) {
                   View folder
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={(e) => {
-                    setSelectedDialog("edit");
-                    e.stopPropagation();
-                  }}
+                  onClick={() => setSelectedDialog("edit")}
                   data-state="edit"
                 >
                   Edit name
@@ -65,10 +62,7 @@ export default function FolderItem(props: FolderItemProps) {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedDialog("delete");
-                  }}
+                  onSelect={() => setSelectedDialog("delete")}
                   data-state="delete"
                 >
                   <span className="text-red-500">Delete</span>
@@ -80,23 +74,23 @@ export default function FolderItem(props: FolderItemProps) {
             open={selectedDialog === "edit"}
             onOpenChange={(open) => setSelectedDialog(open ? "edit" : "")}
             onCreateFolder={(name) => {
-              dispatch(updateFolder({ id: folder.id, name: name }));
+              dispatch(updateFolder({ id: item.id, name: name }));
             }}
-            defaultName={folder.name}
+            defaultName={item.name}
           />
           <DeleteFolderDialog
             open={selectedDialog === "delete"}
             onOpenChange={(open) => setSelectedDialog(open ? "delete" : "")}
             onDeleteFolder={(deleteAllNotes) => {
               if (deleteAllNotes) {
-                dispatch(trashFolderNotes(folder.id));
+                dispatch(trashFolderNotes(item.id));
               }
-              dispatch(removeFolder(folder.id));
+              dispatch(removeFolder(item.id));
             }}
           />
         </div>
       }
-      body={<div>{new Date(folder.updatedAt).toLocaleDateString()}</div>}
+      body={<div>{new Date(item.updatedAt).toLocaleDateString()}</div>}
       footer={
         <div>
           {folderNotes.length === 0

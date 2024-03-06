@@ -1,12 +1,18 @@
 import type { Content } from "@tiptap/react";
 
-export type Item<T = {}> = {
+export type ItemTypes = {
+  note: Note;
+  folder: Folder;
+  tag: Tag;
+};
+
+export type Item<T extends keyof ItemTypes> = {
   id: string;
   type: string;
   createdAt: number;
   updatedAt: number;
   deletedAt: number;
-} & ItemKeys<T>;
+} & ItemKeys<ItemTypes[T]>;
 
 type ItemKeys<T> = {
   [K in keyof T]: T[K];

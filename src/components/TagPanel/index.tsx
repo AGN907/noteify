@@ -4,7 +4,7 @@ import { addTag } from "@/redux/tags/tagsSlice";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { AssignTagDialog } from "../Dialogs/";
-import type { Item, Tag } from "../ListItem/types";
+import type { Item } from "../ListItem/types";
 import TagBadge from "../TagBadge";
 import { Badge } from "../ui/badge";
 
@@ -74,26 +74,24 @@ export default function TagsPanel() {
 }
 
 type TagListProps = {
-  tags: (Item<Tag> | undefined)[];
+  tags: (Item<"tag"> | undefined)[];
   onTagClick: (tagId: string | undefined) => void;
   onTagDelete: (tagId: string | undefined) => void;
 };
 
 const TagList = ({ tags, onTagClick, onTagDelete }: TagListProps) => {
-  return (
-    <>
-      {tags.map((tag) => (
-        <>
-          {tag ? (
-            <TagBadge
-              key={tag.id}
-              tag={tag}
-              onTagClick={() => onTagClick(tag.id)}
-              onTagDelete={() => onTagDelete(tag.id)}
-            />
-          ) : null}
-        </>
-      ))}
-    </>
-  );
+  const renderTagsBadge = () =>
+    tags?.map((tag) => {
+      if (!tag) return null;
+      return (
+        <TagBadge
+          key={tag?.id}
+          tag={tag}
+          onTagClick={() => onTagClick(tag?.name)}
+          onTagDelete={() => onTagDelete(tag?.id)}
+        />
+      );
+    });
+
+  return <>{renderTagsBadge()}</>;
 };

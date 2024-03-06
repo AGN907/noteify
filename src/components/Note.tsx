@@ -11,7 +11,7 @@ import { useState } from "react";
 import { PiDotsThree, PiPushPinSimple, PiStar } from "react-icons/pi";
 import { AssignFolderDialog } from "./Dialogs/";
 import ListItem from "./ListItem";
-import type { Item, Note } from "./ListItem/types";
+import type { Item } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
 import {
   DropdownMenu,
@@ -24,24 +24,24 @@ import {
 } from "./ui/dropdown-menu";
 
 interface NoteProps {
-  note: Item<Note>;
+  item: Item<"note">;
 }
 
 export default function Note(props: NoteProps) {
-  const { note } = props;
+  const { item } = props;
   const [openDialog, setOpenDialog] = useState(false);
 
   const { selectedNoteId } = useAppSelector((state) => state.notes);
   const dispatch = useAppDispatch();
 
-  const isSelected = note.id === selectedNoteId;
+  const isSelected = item.id === selectedNoteId;
 
   return (
     <ListItem
-      item={note}
+      item={item}
       title={
         <div className="flex justify-between">
-          <span className="mr-auto">{note.title}</span>
+          <span className="mr-auto">{item.title}</span>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <PiDotsThree size={20} />
@@ -49,20 +49,29 @@ export default function Note(props: NoteProps) {
             <DropdownMenuContent>
               <DropdownMenuGroup>
                 <DropdownMenuCheckboxItem
-                  onSelect={() => dispatch(pinNote(note.id))}
-                  checked={note.isPinned}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(pinNote(item.id));
+                  }}
+                  checked={item.isPinned}
                 >
                   Pinned
                 </DropdownMenuCheckboxItem>
                 <DropdownMenuCheckboxItem
-                  onSelect={() => dispatch(favouriteNote(note.id))}
-                  checked={note.isFavourite}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(favouriteNote(item.id));
+                  }}
+                  checked={item.isFavourite}
                 >
                   Favourite
                 </DropdownMenuCheckboxItem>
                 <DropdownMenuCheckboxItem
-                  onSelect={() => dispatch(previewNote(note.id))}
-                  checked={note.readonly}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(previewNote(item.id));
+                  }}
+                  checked={item.readonly}
                 >
                   Read Only
                 </DropdownMenuCheckboxItem>
@@ -70,18 +79,29 @@ export default function Note(props: NoteProps) {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  onSelect={() => dispatch(duplicateNote(note.id))}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(duplicateNote(item.id));
+                  }}
                 >
                   Duplicate
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => setOpenDialog(true)}>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenDialog(true);
+                  }}
+                >
                   Assign to folder
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  onSelect={() => dispatch(moveNoteToTrash(note.id))}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(moveNoteToTrash(item.id));
+                  }}
                 >
                   <span className="text-red-500">Move to trash</span>
                 </DropdownMenuItem>
@@ -91,7 +111,7 @@ export default function Note(props: NoteProps) {
           <AssignFolderDialog
             open={openDialog}
             onOpenChange={setOpenDialog}
-            selectedNote={note}
+            selectedNote={item}
           >
             <span></span>
           </AssignFolderDialog>
@@ -100,15 +120,17 @@ export default function Note(props: NoteProps) {
       footer={
         <div className="flex items-center justify-between pt-4">
           <div className="flex gap-2">
-            {note.isPinned && <PiPushPinSimple size={14} />}
-            {note.isFavourite && <PiStar size={14} />}
+            {item.isPinned && <PiPushPinSimple size={14} />}
+            {item.isFavourite && <PiStar size={14} />}
           </div>
           <div>
-            <TimeAgo timestamp={note.updatedAt} />
+            <TimeAgo timestamp={item.createdAt} />
           </div>
         </div>
       }
-      onItemClick={() => dispatch(selectNote(note.id))}
+      onItemClick={(e) => {
+        dispatch(selectNote(item.id));
+      }}
       isSelected={isSelected}
     />
   );

@@ -6,7 +6,7 @@ import {
 } from "@/redux/notes/notesSlice";
 import { PiDotsThree } from "react-icons/pi";
 import ListItem from "./ListItem";
-import type { Item, Note } from "./ListItem/types";
+import type { Item } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
 import {
   DropdownMenu,
@@ -18,22 +18,22 @@ import {
 } from "./ui/dropdown-menu";
 
 interface TrashNoteProps {
-  note: Item<Note>;
+  item: Item<"note">;
 }
 
 export default function TrashNote(props: TrashNoteProps) {
-  const { note } = props;
+  const { item } = props;
   const { selectedNoteId } = useAppSelector((state) => state.notes);
   const dispatch = useAppDispatch();
 
-  const isSelected = note.id === selectedNoteId;
+  const isSelected = item.id === selectedNoteId;
 
   return (
     <ListItem
-      item={note}
+      item={item}
       title={
         <div className="flex justify-between">
-          <span className="mr-auto">{note.title}</span>
+          <span className="mr-auto">{item.title}</span>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <PiDotsThree size={20} />
@@ -41,7 +41,7 @@ export default function TrashNote(props: TrashNoteProps) {
             <DropdownMenuContent>
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  onSelect={() => dispatch(restoreNoteFromTrash(note.id))}
+                  onSelect={() => dispatch(restoreNoteFromTrash(item.id))}
                 >
                   Restore note
                 </DropdownMenuItem>
@@ -49,7 +49,7 @@ export default function TrashNote(props: TrashNoteProps) {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  onSelect={() => dispatch(permaDeleteNote(note.id))}
+                  onSelect={() => dispatch(permaDeleteNote(item.id))}
                 >
                   <span className="text-red-500">Delete forever</span>
                 </DropdownMenuItem>
@@ -60,11 +60,11 @@ export default function TrashNote(props: TrashNoteProps) {
       }
       footer={
         <div className="ml-auto">
-          <TimeAgo timestamp={note.deletedAt} />
+          <TimeAgo timestamp={item.deletedAt} />
         </div>
       }
       isSelected={isSelected}
-      onItemClick={() => dispatch(selectNote(note.id))}
+      onItemClick={() => dispatch(selectNote(item.id))}
     />
   );
 }
