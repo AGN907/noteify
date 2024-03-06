@@ -1,21 +1,21 @@
-import { type ReactNode } from "react";
-import type { Item } from "./types";
+import { Ref, forwardRef, type ReactNode } from "react";
+import type { Item, ItemTypes } from "./types";
 
 interface ListItemProps {
-  item: Item;
+  item: Item<keyof ItemTypes>;
   title: ReactNode;
   body?: ReactNode;
   footer?: ReactNode;
-  onItemClick?: () => void;
+  onItemClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   isSelected: boolean;
 }
 
-export default function ListItem(props: ListItemProps) {
-  const { title, body, footer, item, onItemClick, isSelected } = props;
-
+const ListItem = forwardRef((props: ListItemProps, ref: Ref<HTMLLIElement>) => {
+  const { item, title, body, footer, onItemClick, isSelected } = props;
   return (
     <li
-      onClick={() => onItemClick && onItemClick()}
+      onClick={(e) => onItemClick && onItemClick(e)}
+      ref={ref}
       id={item.id}
       className={`flex cursor-pointer flex-col rounded-md px-2 py-2 hover:bg-accent ${isSelected ? "bg-accent" : ""}`}
     >
@@ -26,4 +26,8 @@ export default function ListItem(props: ListItemProps) {
       </div>
     </li>
   );
-}
+});
+
+ListItem.displayName = "ListItem";
+
+export default ListItem;
