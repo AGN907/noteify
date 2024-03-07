@@ -128,7 +128,7 @@ export default function NoteItem(props: NoteProps) {
           </div>
         </div>
       }
-      onItemClick={(e) => {
+      onItemClick={() => {
         dispatch(selectNote(item.id));
       }}
       isSelected={isSelected}
