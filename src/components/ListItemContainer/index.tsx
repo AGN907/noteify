@@ -40,7 +40,7 @@ const ListItemContainer = <T extends keyof ListTypes>({
     <ul className="h-screen overflow-y-auto pb-14">
       {pinnedItems.length > 0 && (
         <div>
-          <h2 className="px-1 pt-4 text-xl font-semibold">Pinned</h2>
+          <ListItemsHeader title="Pinned" />
           {pinnedItems.map((item) => (
             <Component key={item.id} item={item} />
           ))}
@@ -48,7 +48,7 @@ const ListItemContainer = <T extends keyof ListTypes>({
       )}
       {Object.entries(groupedByDate).map(([date, items]) => (
         <div key={date}>
-          <h2 className="px-1 pt-4 text-xl font-semibold">{date}</h2>
+          <ListItemsHeader title={date} />
           {items.map((item) => (
             <Component key={item.id} item={item} />
           ))}
@@ -56,6 +56,10 @@ const ListItemContainer = <T extends keyof ListTypes>({
       ))}
     </ul>
   );
+};
+
+const ListItemsHeader = ({ title }: { title: string }) => {
+  return <h2 className="px-1 py-2 text-xl font-semibold">{title}</h2>;
 };
 
 export default ListItemContainer;
