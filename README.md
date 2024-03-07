@@ -1,7 +1,7 @@
 # Noteify
 
 
-A Local note taking app that has beautiful UI and an easy to use interface, that saves your notes in your browser for fast access.
+A Local note-taking app that has a beautiful UI and an easy-to-use interface, that saves your notes in your browser for fast access.
 
 ## Preview 
 ![Noteify](./screenshots/noteify-light.png)
