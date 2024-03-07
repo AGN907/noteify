@@ -1,22 +1,38 @@
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentProps } from "react";
 import FolderItem from "../FolderItem";
-import NoteItem from "../Note";
+import { ListTypes } from "../ListItem/types";
+import NoteItem from "../NoteItem";
 import TagItem from "../TagItem";
+import TrashItem from "../TrashItem";
+
+type ListWrappers = {
+  note: typeof NoteItem;
+  folder: typeof FolderItem;
+  tag: typeof TagItem;
+  trash: typeof TrashItem;
+};
 
 const listWrappers = {
   note: NoteItem,
   folder: FolderItem,
   tag: TagItem,
+  trash: TrashItem,
 };
 
-type ListWrappers = typeof listWrappers;
 export type ListType = keyof ListWrappers;
 
-export const wrapList = (type: ListType) => {
-  const Component = listWrappers[type];
+type Props =
+  | ComponentProps<typeof NoteItem>
+  | ComponentProps<typeof FolderItem>
+  | ComponentProps<typeof TagItem>
+  | ComponentProps<typeof TrashItem>;
 
-  // TODO: fix this type
-  return (props: ComponentPropsWithoutRef<typeof Component>) => (
-    <Component {...props} />
-  );
+export const getListWrapper = (type: keyof ListTypes) => (props: Props) => {
+  const Component = listWrappers[type] as (props: Props) => JSX.Element;
+
+  if (!Component) {
+    throw new Error(`No wrapper found for type: ${type}`);
+  }
+
+  return <Component {...props} />;
 };
