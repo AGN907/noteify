@@ -18,13 +18,13 @@ const ListItemContainer = <T extends keyof ListTypes>({
 
   const sortedItems = items
     .slice()
-    .sort((a, b) => b.updatedAt - a.updatedAt)
+    .sort((a, b) => b.createdAt - a.createdAt)
     //@ts-ignore
     .filter((item) => !item.isPinned);
 
   const groupedByDate = sortedItems.reduce(
     (acc, item) => {
-      const date = dayjs(item.updatedAt).calendar();
+      const date = dayjs(item.createdAt).calendar();
 
       if (!acc[date]) {
         acc[date] = [];
