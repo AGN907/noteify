@@ -9,7 +9,7 @@ import {
 } from "@/redux/notes/notesSlice";
 import { useState } from "react";
 import { PiDotsThree, PiPushPinSimple, PiStar } from "react-icons/pi";
-import { AssignFolderDialog } from "./Dialogs/";
+import { AssignFolderDialog } from "./Dialogs";
 import ListItem from "./ListItem";
 import type { ExtendedItem } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
@@ -27,7 +27,7 @@ interface NoteProps {
   item: ExtendedItem<"note">;
 }
 
-export default function Note(props: NoteProps) {
+export default function NoteItem(props: NoteProps) {
   const { item } = props;
   const [openDialog, setOpenDialog] = useState(false);
 
