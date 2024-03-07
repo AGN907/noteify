@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/app/hooks";
 import { selectNote } from "@/redux/notes/notesSlice";
 import { EditorContent, useEditor, type JSONContent } from "@tiptap/react";
-import { useRef } from "react";
+import { useEffect, useState } from "react";
 import { PiArrowLeft } from "react-icons/pi";
 import type { ExtendedItem } from "../ListItem/types";
 import TagsPanel from "../TagPanel";
@@ -23,7 +23,7 @@ interface EditorProps {
 export default function Editor(props: EditorProps) {
   const { note, onChange } = props;
 
-  const titleRef = useRef<HTMLInputElement>(null);
+  const [editorTitle, setEditorTitle] = useState(note.title);
 
   const dispatch = useAppDispatch();
 
@@ -54,6 +54,10 @@ export default function Editor(props: EditorProps) {
     dispatch(selectNote(null));
   };
 
+  useEffect(() => {
+    setEditorTitle(note.title);
+  }, [note.id]);
+
   return (
     <div className="flex h-full flex-1 justify-center lg:px-10">
       <Button
@@ -75,14 +79,15 @@ export default function Editor(props: EditorProps) {
         <TagsPanel />
         <div className="flex flex-col gap-y-4 px-10 pt-2">
           <Input
-            ref={titleRef}
             type="text"
-            defaultValue={note.title}
-            onChange={() =>
+            value={editorTitle}
+            onChange={(e) => {
+              setEditorTitle(e.target.value);
+
               onChange({
-                title: titleRef.current?.value,
-              })
-            }
+                title: e.target.value,
+              });
+            }}
             className="border-none text-4xl font-semibold focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent"
           />
           <hr className="border-b-0 border-slate-300" />
