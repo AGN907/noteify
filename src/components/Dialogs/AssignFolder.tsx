@@ -58,7 +58,7 @@ export default function AssignFolderDialog(props: AssignFolderDialogProps) {
               <SelectContent>
                 {folders.map((folder) => (
                   <SelectItem key={folder.id} id={folder.id} value={folder.id}>
-                    {folder.name}
+                    {folder.title}
                   </SelectItem>
                 ))}
               </SelectContent>

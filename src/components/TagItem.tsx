@@ -42,7 +42,7 @@ export default function TagItem(props: TagItemProps) {
       item={item}
       title={
         <div className="relative flex justify-between">
-          <span className="mr-auto">{item.name}</span>
+          <span className="mr-auto">{item.title}</span>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <PiDotsThree className="absolute right-2 top-2 z-20" size={20} />
@@ -68,9 +68,9 @@ export default function TagItem(props: TagItemProps) {
             open={selectedDialog === "edit"}
             onOpenChange={(open) => setSelectedDialog(open ? "edit" : "")}
             onCreateTag={(name) => {
-              dispatch(updateTag({ id: item.id, name: name }));
+              dispatch(updateTag({ id: item.id, title: name }));
             }}
-            defaultName={item.name}
+            defaultName={item.title}
           />
           <DeleteTagDialog
             open={selectedDialog === "delete"}

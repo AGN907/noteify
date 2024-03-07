@@ -14,13 +14,13 @@ export default function TagBadge(props: TagBadgeProps) {
   if (!tag) return null;
 
   return (
-    <div className="relative" aria-label={tag.name + " tag"}>
+    <div className="relative" aria-label={tag.title + " tag"}>
       <Badge
         onClick={onTagClick}
         variant="outline"
         className="cursor-pointer pr-5"
       >
-        {tag.name}
+        {tag.title}
       </Badge>
       <PiX
         aria-label="Remove tag"

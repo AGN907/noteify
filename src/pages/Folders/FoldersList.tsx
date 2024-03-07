@@ -10,10 +10,10 @@ export default function Folders() {
   const { folders } = useAppSelector((state) => state.folders);
   const dispatch = useAppDispatch();
 
-  const handleCreateFolder = (name: string) => {
-    if (!name) return;
+  const handleCreateFolder = (title: string) => {
+    if (!title) return;
 
-    dispatch(addFolder({ name }));
+    dispatch(addFolder({ title }));
   };
 
   folders;

@@ -16,7 +16,7 @@ export const exampleNote = {
 export const exampleTag = {
   id: "1",
   type: "tag",
-  name: "tag1",
+  title: "tag1",
   createdAt: Date.now(),
   updatedAt: Date.now(),
   deletedAt: 0,
@@ -25,7 +25,7 @@ export const exampleTag = {
 export const exampleFolder = {
   id: "1",
   type: "folder",
-  name: "folder1",
+  title: "folder1",
   createdAt: Date.now(),
   updatedAt: Date.now(),
   deletedAt: 0,

@@ -56,12 +56,14 @@ export const tagsSlice = createSlice({
   name: "tags",
   initialState,
   reducers: {
-    addTag: (state, action: PayloadAction<{ id?: string; name: string }>) => {
-      const { name } = action.payload;
+    addTag: (state, action: PayloadAction<{ id?: string; title: string }>) => {
+      const { title } = action.payload;
       const id = action.payload.id ?? uuid();
 
       if (
-        state.tags.find((tag) => tag.name.toLowerCase() === name.toLowerCase())
+        state.tags.find(
+          (tag) => tag.title.toLowerCase() === title.toLowerCase(),
+        )
       ) {
         toast.error("Tag already exists");
         return;
@@ -69,7 +71,7 @@ export const tagsSlice = createSlice({
 
       state.tags.push({
         id,
-        name,
+        title,
         createdAt: Date.now(),
         updatedAt: Date.now(),
         deletedAt: 0,
@@ -78,11 +80,16 @@ export const tagsSlice = createSlice({
 
       toast.success("Tag was created successfully");
     },
-    updateTag: (state, action: PayloadAction<{ id: string; name: string }>) => {
-      const { id, name } = action.payload;
+    updateTag: (
+      state,
+      action: PayloadAction<{ id: string; title: string }>,
+    ) => {
+      const { id, title } = action.payload;
 
       if (
-        state.tags.find((tag) => tag.name.toLowerCase() === name.toLowerCase())
+        state.tags.find(
+          (tag) => tag.title.toLowerCase() === title.toLowerCase(),
+        )
       ) {
         toast.error("Tag already exists");
         return;
@@ -91,7 +98,7 @@ export const tagsSlice = createSlice({
       const tag = state.tags.find((tag) => tag.id === id);
 
       if (tag) {
-        tag.name = name;
+        tag.title = title;
         tag.updatedAt = Date.now();
       }
 

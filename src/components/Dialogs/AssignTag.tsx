@@ -12,7 +12,7 @@ import { Input } from "../ui/input";
 
 type AssignTagDialogProps = {
   children: React.ReactNode;
-  onTagAssign: (name: string, isNew?: boolean) => void;
+  onTagAssign: (title: string, isNew?: boolean) => void;
   onTagRemove: (tagId: string) => void;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -20,7 +20,7 @@ type AssignTagDialogProps = {
 
 export default function AssignTagDialog(props: AssignTagDialogProps) {
   const { children, onTagAssign, onTagRemove, ...restProps } = props;
-  const [tagName, setTagName] = useState("");
+  const [tagTitle, setTagTitle] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -37,25 +37,25 @@ export default function AssignTagDialog(props: AssignTagDialogProps) {
     allTags.find((t) => t.id === tagId),
   );
 
-  const filteredTags = tagName
+  const filteredTags = tagTitle
     ? allTags
         .filter(
           (tag) =>
-            tag.name.toLowerCase().includes(tagName.toLowerCase()) &&
+            tag.title.toLowerCase().includes(tagTitle.toLowerCase()) &&
             !selectedTags.some((t) => t?.id === tag.id),
         )
         .slice(0, 10)
     : allTags.filter((tag) => !selectedTags.some((t) => t?.id === tag.id));
 
   const handleChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (tagName && e.key === "Enter") {
+    if (tagTitle && e.key === "Enter") {
       onTagAssign(
-        tagName,
+        tagTitle,
         !allTags.some(
-          ({ name }) => name.toLowerCase() === tagName.toLowerCase(),
+          ({ title }) => title.toLowerCase() === tagTitle.toLowerCase(),
         ),
       );
-      setTagName("");
+      setTagTitle("");
     }
   };
 
@@ -66,7 +66,7 @@ export default function AssignTagDialog(props: AssignTagDialogProps) {
         <TagBadge
           key={tag?.id}
           tag={tag}
-          onTagClick={() => onTagAssign(tag?.name)}
+          onTagClick={() => onTagAssign(tag?.title)}
           onTagDelete={() => onTagRemove(tag?.id)}
         />
       );
@@ -83,9 +83,9 @@ export default function AssignTagDialog(props: AssignTagDialogProps) {
             ref={inputRef}
             name="Tag name"
             onKeyDown={(e) => handleChange(e)}
-            onChange={(e) => setTagName(e.target.value)}
-            value={tagName}
-            placeholder="Enter tag name"
+            onChange={(e) => setTagTitle(e.target.value)}
+            value={tagTitle}
+            placeholder="Enter tag title"
             className="focus-visible:ring-0 focus-visible:ring-transparent"
           />
           <div className="mt-4 flex w-full flex-wrap gap-2">
@@ -95,7 +95,7 @@ export default function AssignTagDialog(props: AssignTagDialogProps) {
                 className="cursor-pointer"
                 onClick={() => onTagAssign(tag.id, false)}
               >
-                {tag.name}
+                {tag.title}
               </Badge>
             ))}
           </div>

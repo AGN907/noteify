@@ -42,7 +42,7 @@ export default function FolderItem(props: FolderItemProps) {
       item={item}
       title={
         <div className="flex justify-between">
-          <span className="mr-auto">{item.name}</span>
+          <span className="mr-auto">{item.title}</span>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <PiDotsThree size={20} />
@@ -73,10 +73,10 @@ export default function FolderItem(props: FolderItemProps) {
           <CreateFolderDialog
             open={selectedDialog === "edit"}
             onOpenChange={(open) => setSelectedDialog(open ? "edit" : "")}
-            onCreateFolder={(name) => {
-              dispatch(updateFolder({ id: item.id, name: name }));
+            onCreateFolder={(title) => {
+              dispatch(updateFolder({ id: item.id, title }));
             }}
-            defaultName={item.name}
+            defaultName={item.title}
           />
           <DeleteFolderDialog
             open={selectedDialog === "delete"}

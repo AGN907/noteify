@@ -27,7 +27,7 @@ describe("CreateFolderDialog", () => {
     const store = setupStore({});
 
     const onCreateFolder = (name: string) =>
-      store.dispatch(addFolder({ name: name }));
+      store.dispatch(addFolder({ title: name }));
 
     const { getByText, getByPlaceholderText } = render(
       <CreateFolderDialog onCreateFolder={onCreateFolder}>
@@ -41,7 +41,7 @@ describe("CreateFolderDialog", () => {
 
     expect(store.getState().folders.folders).toHaveLength(0);
 
-    const input = getByPlaceholderText("Enter folder name");
+    const input = getByPlaceholderText("Enter folder title");
     await userEvent.type(input, "folder1");
     await userEvent.click(getByText("Create"));
 
@@ -58,7 +58,7 @@ describe("CreateFolderDialog", () => {
     });
 
     const onCreateFolder = (name: string) =>
-      store.dispatch(updateFolder({ id: exampleFolder.id, name: name }));
+      store.dispatch(updateFolder({ id: exampleFolder.id, title: name }));
 
     const { getByText, getByDisplayValue } = render(
       <CreateFolderDialog onCreateFolder={onCreateFolder} defaultName="test">
@@ -71,7 +71,7 @@ describe("CreateFolderDialog", () => {
     await userEvent.click(dialogTrigger);
 
     expect(store.getState().folders.folders).toHaveLength(1);
-    expect(store.getState().folders.folders[0].name).toBe("folder1");
+    expect(store.getState().folders.folders[0].title).toBe("folder1");
 
     const input = getByDisplayValue("test");
 
@@ -80,6 +80,6 @@ describe("CreateFolderDialog", () => {
     await userEvent.click(getByText("Rename"));
 
     expect(store.getState().folders.folders).toHaveLength(1);
-    expect(store.getState().folders.folders[0].name).toBe("folder2");
+    expect(store.getState().folders.folders[0].title).toBe("folder2");
   });
 });

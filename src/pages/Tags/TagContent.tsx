@@ -34,7 +34,7 @@ export default function TagContent() {
           <PiArrowLeft size={24} onClick={() => navigate(-1)} />
         </Button>
         <h1 className="w-64 truncate p-4 text-2xl font-medium">
-          {selectedTag?.name}
+          {selectedTag?.title}
         </h1>
       </div>
       <hr className="border-t border-accent" />

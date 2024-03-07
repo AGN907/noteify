@@ -13,7 +13,7 @@ import { useRef } from "react";
 
 type CreateFolderDialogProps = {
   children?: React.ReactNode;
-  onCreateFolder: (name: string) => void;
+  onCreateFolder: (title: string) => void;
   defaultName?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -31,12 +31,12 @@ export default function CreateFolderDialog(props: CreateFolderDialogProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>{actionText} folder</DialogHeader>
-        <DialogDescription>Enter a name for your folder.</DialogDescription>
+        <DialogDescription>Enter a title for your folder.</DialogDescription>
         <div className="p-4">
           <Input
             ref={inputRef}
-            name="Folder name"
-            placeholder="Enter folder name"
+            name="Folder title"
+            placeholder="Enter folder title"
             className="focus-visible:ring-0 focus-visible:ring-transparent"
             defaultValue={defaultName}
           />

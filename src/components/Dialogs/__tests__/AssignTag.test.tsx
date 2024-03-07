@@ -44,7 +44,7 @@ describe("AssignTagDialog", () => {
     const dialog = getByRole("dialog");
     expect(dialog).toBeInTheDocument();
 
-    const input = getByPlaceholderText("Enter tag name");
+    const input = getByPlaceholderText("Enter tag title");
     expect(input).toBeInTheDocument();
   });
   it("should render selected note tags", async () => {
@@ -60,7 +60,7 @@ describe("AssignTagDialog", () => {
             isNotesLoading: false,
           },
           tags: {
-            tags: [exampleTag, { ...exampleTag, id: "2", name: "tag2" }],
+            tags: [exampleTag, { ...exampleTag, id: "2", title: "tag2" }],
           },
         },
       },
@@ -81,7 +81,7 @@ describe("AssignTagDialog", () => {
         isNotesLoading: false,
       },
       tags: {
-        tags: [exampleTag, { ...exampleTag, id: "2", name: "tag2" }],
+        tags: [exampleTag, { ...exampleTag, id: "2", title: "tag2" }],
       },
     };
     const store = setupStore({ preloadedState });
@@ -103,7 +103,7 @@ describe("AssignTagDialog", () => {
     const removeTagButton = getByLabelText("Remove tag");
     await userEvent.click(removeTagButton);
 
-    const tag = queryByLabelText(exampleTag.name + " tag");
+    const tag = queryByLabelText(exampleTag.title + " tag");
 
     expect(tag).not.toBeInTheDocument();
     expect(store.getState().notes.notes[0].tags).toEqual([]);
@@ -142,7 +142,7 @@ describe("AssignTagDialog", () => {
         isNotesLoading: false,
       },
       tags: {
-        tags: [exampleTag, { ...exampleTag, id: "2", name: "tag2" }],
+        tags: [exampleTag, { ...exampleTag, id: "2", title: "tag2" }],
       },
     };
     const store = setupStore({ preloadedState });
@@ -176,13 +176,13 @@ describe("AssignTagDialog", () => {
         isNotesLoading: false,
       },
       tags: {
-        tags: [exampleTag, { ...exampleTag, id: "2", name: "tag2" }],
+        tags: [exampleTag, { ...exampleTag, id: "2", title: "tag2" }],
       },
     };
 
     const store = setupStore({ preloadedState });
     const onTagAssign = (tagId: string) => {
-      store.dispatch(addTag({ id: "3", name: tagId }));
+      store.dispatch(addTag({ id: "3", title: tagId }));
       store.dispatch(addTagToNote({ noteId: "1", tagId: "3" }));
     };
 

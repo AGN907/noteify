@@ -11,10 +11,10 @@ export default function TagsList() {
 
   const dispatch = useAppDispatch();
 
-  const handleTagCreate = (name: string) => {
-    if (!name) return;
+  const handleTagCreate = (title: string) => {
+    if (!title) return;
 
-    dispatch(addTag({ name }));
+    dispatch(addTag({ title }));
   };
 
   return (

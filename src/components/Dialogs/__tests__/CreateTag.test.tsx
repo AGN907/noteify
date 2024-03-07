@@ -20,13 +20,12 @@ describe("CreateTagDialog", () => {
     const dialog = getByText("Create tag");
     expect(dialog).toBeInTheDocument();
 
-    const input = getByPlaceholderText("Enter tag name");
+    const input = getByPlaceholderText("Enter tag title");
     expect(input).toBeInTheDocument();
   });
   it("should create tag", async () => {
     const store = setupStore({});
-    const onCreateTag = (name: string) =>
-      store.dispatch(addTag({ name: name }));
+    const onCreateTag = (title: string) => store.dispatch(addTag({ title }));
 
     const { getByText, getByPlaceholderText } = render(
       <CreateTagDialog onCreateTag={onCreateTag}>
@@ -39,7 +38,7 @@ describe("CreateTagDialog", () => {
 
     expect(store.getState().tags.tags).toHaveLength(0);
 
-    const input = getByPlaceholderText("Enter tag name");
+    const input = getByPlaceholderText("Enter tag title");
     await userEvent.type(input, "folder1");
 
     await userEvent.click(getByText("Create"));
@@ -54,11 +53,11 @@ describe("CreateTagDialog", () => {
         },
       },
     });
-    const onCreateTag = (name: string) =>
-      store.dispatch(updateTag({ id: exampleTag.id, name: name }));
+    const onCreateTag = (title: string) =>
+      store.dispatch(updateTag({ id: exampleTag.id, title }));
 
     const { getByText, getByDisplayValue } = render(
-      <CreateTagDialog onCreateTag={onCreateTag} defaultName={exampleTag.name}>
+      <CreateTagDialog onCreateTag={onCreateTag} defaultName={exampleTag.title}>
         <span>Launch Dialog</span>
       </CreateTagDialog>,
       { store },
@@ -68,7 +67,7 @@ describe("CreateTagDialog", () => {
     await userEvent.click(dialogTrigger);
 
     expect(store.getState().tags.tags).toHaveLength(1);
-    expect(store.getState().tags.tags[0].name).toBe("tag1");
+    expect(store.getState().tags.tags[0].title).toBe("tag1");
 
     const input = getByDisplayValue("tag1");
 
@@ -78,6 +77,6 @@ describe("CreateTagDialog", () => {
     await userEvent.click(getByText("Rename"));
 
     expect(store.getState().tags.tags).toHaveLength(1);
-    expect(store.getState().tags.tags[0].name).toBe("tag2");
+    expect(store.getState().tags.tags[0].title).toBe("tag2");
   });
 });

@@ -49,10 +49,10 @@ describe("AssignFolderDialog", () => {
     const combobox = getByRole("combobox");
     await userEvent.click(combobox);
 
-    const option = getByText(exampleFolder.name);
+    const option = getByText(exampleFolder.title);
     await userEvent.click(option);
 
-    expect(combobox.textContent).toEqual(exampleFolder.name);
+    expect(combobox.textContent).toEqual(exampleFolder.title);
 
     const button = getByRole("button", { name: "Assign" });
     await userEvent.click(button);

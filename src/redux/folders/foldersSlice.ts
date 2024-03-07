@@ -69,13 +69,13 @@ const foldersSlice = createSlice({
   name: "folders",
   initialState,
   reducers: {
-    addFolder: (state, action: PayloadAction<{ name: string }>) => {
+    addFolder: (state, action: PayloadAction<{ title: string }>) => {
       const id = uuid();
-      const { name } = action.payload;
+      const { title } = action.payload;
 
       state.folders.push({
         id,
-        name,
+        title,
         createdAt: Date.now(),
         updatedAt: Date.now(),
         deletedAt: 0,
@@ -84,13 +84,13 @@ const foldersSlice = createSlice({
     },
     updateFolder: (
       state,
-      action: PayloadAction<{ id: string; name: string }>,
+      action: PayloadAction<{ id: string; title: string }>,
     ) => {
-      const { id, name } = action.payload;
+      const { id, title } = action.payload;
       const folderIndex = state.folders.findIndex((f) => f.id === id);
 
       if (folderIndex !== -1) {
-        state.folders[folderIndex].name = name;
+        state.folders[folderIndex].title = title;
         state.folders[folderIndex].updatedAt = Date.now();
       }
     },

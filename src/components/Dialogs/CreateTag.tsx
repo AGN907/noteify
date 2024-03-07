@@ -13,7 +13,7 @@ import { Input } from "../ui/input";
 
 type CreateTagDialogProps = {
   children?: React.ReactNode;
-  onCreateTag: (name: string) => void;
+  onCreateTag: (title: string) => void;
   defaultName?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -31,12 +31,12 @@ export default function CreateTagDialog(props: CreateTagDialogProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>{actionText} tag</DialogHeader>
-        <DialogDescription>Enter a name for your tag.</DialogDescription>
+        <DialogDescription>Enter a title for your tag.</DialogDescription>
         <div className="p-4">
           <Input
             ref={inputRef}
-            name="Tag name"
-            placeholder="Enter tag name"
+            name="Tag title"
+            placeholder="Enter tag title"
             className="focus-visible:ring-0 focus-visible:ring-transparent"
             defaultValue={defaultName}
           />

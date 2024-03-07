@@ -38,9 +38,9 @@ export type Note = {
 };
 
 export type Tag = {
-  name: string;
+  title: string;
 };
 
 export type Folder = {
-  name: string;
+  title: string;
 };

@@ -43,7 +43,7 @@ export default function FolderContent() {
           <PiArrowLeft size={24} onClick={() => navigate(-1)} />
         </Button>
         <h1 className="w-64 truncate p-4 text-2xl font-medium ">
-          {selectedFolder.name}
+          {selectedFolder.title}
         </h1>
         <Button variant="link" size="icon" className="ml-auto mr-4">
           <PiFilePlus
