@@ -1,5 +1,6 @@
 import { useAppSelector } from "@/app/hooks";
 import ListItemContainer from "@/components/ListItemContainer";
+import Note from "@/components/Note";
 import { Button } from "@/components/ui/button";
 import { PiArrowLeft } from "react-icons/pi";
 import { useLoaderData, useNavigate, type Params } from "react-router-dom";
@@ -42,7 +43,11 @@ export default function TagContent() {
           <p>No notes yet. Add this tag to a note to view them here.</p>
         </div>
       )}
-      <ListItemContainer type="note" items={tagNotes} />
+      <ListItemContainer
+        type="note"
+        items={tagNotes}
+        renderItem={(item) => <Note item={item} />}
+      />
     </div>
   );
 }

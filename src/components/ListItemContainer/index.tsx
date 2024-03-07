@@ -1,72 +1,46 @@
 import dayjs from "dayjs";
-import { Item, ItemTypes } from "../ListItem/types";
-import { wrapList } from "./listWrappers";
+import type { Item, ListTypes } from "../ListItem/types";
 
-interface ListItemContainerProps<C, T> {
-  type: C;
-  items: T[];
-}
+// Todo: Use the `type` to infer the type of the items array and render a Component from an Object of Components instead of using a renderItem function
+type ListItemContainerProps<T, C> = {
+  type: T;
+  items: C[];
+  renderItem: (item: C) => JSX.Element;
+};
 
-// TODO fix this type
-export default function ListItemContainer<
-  C extends keyof ItemTypes,
-  T extends Item<C>,
->(props: ListItemContainerProps<C, T>) {
-  const { items, type } = props;
+const ListItemContainer = <T extends keyof ListTypes>({
+  type,
+  items,
+  renderItem,
+}: ListItemContainerProps<
+  T,
+  T extends keyof ListTypes ? ListTypes[T] : Item
+>) => {
+  const sortedItems = items.slice().sort((a, b) => b.updatedAt - a.updatedAt);
 
-  const Component = wrapList(type);
+  const groupedByDate = sortedItems.reduce(
+    (acc, item) => {
+      const date = dayjs(item.updatedAt).calendar();
 
-  const groupBy = (items: T[], fn: (item: T) => string) => {
-    return items
-      .slice()
-      .sort((a, b) => b.createdAt - a.createdAt)
-      .filter((item) => !item.isPinned)
-      .reduce(
-        (acc, item) => {
-          const key = fn(item);
-          if (!acc[key]) acc[key] = [];
-          acc[key].push(item);
-          return acc;
-        },
-        {} as Record<string, T[]>,
-      );
-  };
-
-  const pinnedItems =
-    type === "note" ? items.filter((item) => item.isPinned) : [];
-
-  const grouped = groupBy(items, (item) =>
-    Date.now() - item.createdAt < 24 * 60 * 60 * 1000
-      ? "Recent"
-      : dayjs(item.createdAt).calendar(),
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(item);
+      return acc;
+    },
+    {} as { [date: string]: typeof items },
   );
-
-  const renderPinnedItems = () => {
-    if (pinnedItems.length > 0) {
-      return (
-        <>
-          <h3 className="rounded-md bg-accent pl-2 text-lg">Pinned</h3>
-          {pinnedItems.map((item) => (
-            <Component key={item.id} item={item} />
-          ))}
-        </>
-      );
-    }
-  };
 
   return (
     <ul className="h-screen overflow-y-auto pb-14">
-      {renderPinnedItems()}
-      {Object.entries(grouped).map(([headerTitle, groupedItems]) => (
-        <div key={headerTitle}>
-          <h3 className="bg-neutral-800 pl-2 text-lg text-gray-50 dark:bg-slate-50 dark:text-neutral-800">
-            {headerTitle}
-          </h3>
-          {groupedItems.map((item) => (
-            <Component key={item.id} item={item} />
-          ))}
+      {Object.entries(groupedByDate).map(([date, items]) => (
+        <div key={date}>
+          <h2 className="px-1 pt-4 text-xl font-semibold">{date}</h2>
+          {items.map(renderItem)}
         </div>
       ))}
     </ul>
   );
-}
+};
+
+export default ListItemContainer;

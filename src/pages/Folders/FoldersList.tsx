@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { CreateFolderDialog } from "@/components/Dialogs/";
+import FolderItem from "@/components/FolderItem";
 import ListItemContainer from "@/components/ListItemContainer";
 import { Button } from "@/components/ui/button";
 import { addFolder } from "@/redux/folders/foldersSlice";
@@ -33,7 +34,11 @@ export default function Folders() {
             <p>No folders yet. Click the button to create a new folder.</p>
           </div>
         )}
-        <ListItemContainer type="folder" items={folders} />
+        <ListItemContainer
+          type="folder"
+          items={folders}
+          renderItem={(item) => <FolderItem item={item} />}
+        />
       </div>
     </div>
   );

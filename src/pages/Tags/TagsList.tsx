@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { CreateTagDialog } from "@/components/Dialogs";
 import ListItemContainer from "@/components/ListItemContainer";
+import TagItem from "@/components/TagItem";
 import { Button } from "@/components/ui/button";
 import { addTag } from "@/redux/tags/tagsSlice";
 import { PiHash } from "react-icons/pi";
@@ -32,7 +33,11 @@ export default function TagsList() {
             <p>No tags yet</p>
           </div>
         )}
-        <ListItemContainer type="tag" items={tags} />
+        <ListItemContainer
+          type="tag"
+          items={tags}
+          renderItem={(item) => <TagItem item={item} />}
+        />
       </div>
     </div>
   );
