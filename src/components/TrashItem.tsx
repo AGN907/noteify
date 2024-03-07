@@ -21,7 +21,7 @@ interface TrashNoteProps {
   item: ExtendedItem<"note">;
 }
 
-export default function TrashNote(props: TrashNoteProps) {
+export default function TrashItem(props: TrashNoteProps) {
   const { item } = props;
   const { selectedNoteId } = useAppSelector((state) => state.notes);
   const dispatch = useAppDispatch();
