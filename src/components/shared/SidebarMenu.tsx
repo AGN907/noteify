@@ -57,7 +57,6 @@ export default function SidebarMenu() {
   }, [isDesktopScreen]);
 
   const handleMenuToggle = () => {
-    console.log("clicked");
     setMenuActive(!menuActive);
   };
 

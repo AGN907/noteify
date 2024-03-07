@@ -22,7 +22,6 @@ export default function Root() {
 
   const debouncedUpdateNote = debounce(
     ({ title, content }: { title?: string; content?: JSONContent }) => {
-      console.log(title);
       dispatch(updateNote({ title, content }));
     },
     700,
