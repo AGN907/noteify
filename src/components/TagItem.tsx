@@ -6,7 +6,7 @@ import { PiDotsThree } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { CreateTagDialog, DeleteTagDialog } from "./Dialogs";
 import ListItem from "./ListItem";
-import type { Item } from "./ListItem/types";
+import type { ExtendedItem } from "./ListItem/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +17,7 @@ import {
 } from "./ui/dropdown-menu";
 
 type TagItemProps = {
-  item: Item<"tag">;
+  item: ExtendedItem<"tag">;
 };
 
 export default function TagItem(props: TagItemProps) {

@@ -1,5 +1,5 @@
 import { startAppListening } from "@/app/middleware";
-import type { Item } from "@/components/ListItem/types";
+import type { ExtendedItem } from "@/components/ListItem/types";
 import storage from "@/lib/db";
 import {
   createAsyncThunk,
@@ -25,7 +25,8 @@ startAppListening({
       await storage.db.remove(action.payload as string);
     }
 
-    const foldersState: Item<"folder">[] = api.getState().folders.folders;
+    const foldersState: ExtendedItem<"folder">[] =
+      api.getState().folders.folders;
 
     storage.db.set(
       "folders",
@@ -43,7 +44,7 @@ startAppListening({
 export const loadFolders = createAsyncThunk("folders/loadFolders", async () => {
   const foldersIds = (await storage.db.get<string[]>("folders")) ?? [];
   const folders = await Promise.all(
-    foldersIds.map((id) => storage.db.get<Item<"folder">>(id)),
+    foldersIds.map((id) => storage.db.get<ExtendedItem<"folder">>(id)),
   );
 
   return folders.reduce((acc, folder) => {
@@ -51,11 +52,11 @@ export const loadFolders = createAsyncThunk("folders/loadFolders", async () => {
       acc.push(folder);
     }
     return acc;
-  }, [] as Item<"folder">[]);
+  }, [] as ExtendedItem<"folder">[]);
 });
 
 type initialState = {
-  folders: Item<"folder">[];
+  folders: ExtendedItem<"folder">[];
   isFoldersLoading: boolean;
 };
 

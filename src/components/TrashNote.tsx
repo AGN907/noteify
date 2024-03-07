@@ -6,7 +6,7 @@ import {
 } from "@/redux/notes/notesSlice";
 import { PiDotsThree } from "react-icons/pi";
 import ListItem from "./ListItem";
-import type { Item } from "./ListItem/types";
+import type { ExtendedItem } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
 import {
   DropdownMenu,
@@ -18,7 +18,7 @@ import {
 } from "./ui/dropdown-menu";
 
 interface TrashNoteProps {
-  item: Item<"note">;
+  item: ExtendedItem<"note">;
 }
 
 export default function TrashNote(props: TrashNoteProps) {

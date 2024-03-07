@@ -1,9 +1,9 @@
 import { PiX } from "react-icons/pi";
-import type { Item } from "./ListItem/types";
+import type { ExtendedItem } from "./ListItem/types";
 import { Badge } from "./ui/badge";
 
 type TagBadgeProps = {
-  tag: Item<"tag"> | undefined;
+  tag: ExtendedItem<"tag"> | undefined;
   onTagClick: () => void;
   onTagDelete: () => void;
 };

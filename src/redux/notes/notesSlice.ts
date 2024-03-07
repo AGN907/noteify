@@ -1,5 +1,5 @@
 import { startAppListening } from "@/app/middleware";
-import type { Item } from "@/components/ListItem/types";
+import type { ExtendedItem } from "@/components/ListItem/types";
 import storage from "@/lib/db";
 import {
   createAsyncThunk,
@@ -27,7 +27,7 @@ startAppListening({
       await storage.db.remove(action.payload as string);
     }
 
-    const notesState: Item<"note">[] = api.getState().notes.notes;
+    const notesState: ExtendedItem<"note">[] = api.getState().notes.notes;
     storage.db.set(
       "notes",
       notesState.map((note) => note.id),
@@ -38,7 +38,7 @@ startAppListening({
 });
 
 export type initialState = {
-  notes: Item<"note">[];
+  notes: ExtendedItem<"note">[];
   selectedNoteId: string | null;
   isNotesLoading: boolean;
 };
@@ -52,7 +52,7 @@ const initialState: initialState = {
 export const loadNotes = createAsyncThunk("notes/loadNotes", async () => {
   const notesIds = (await storage.db.get<string[]>("notes")) ?? [];
   const notes = await Promise.all(
-    notesIds.map((id) => storage.db.get<Item<"note">>(id)),
+    notesIds.map((id) => storage.db.get<ExtendedItem<"note">>(id)),
   );
 
   return notes.reduce((acc, note) => {
@@ -60,7 +60,7 @@ export const loadNotes = createAsyncThunk("notes/loadNotes", async () => {
       acc.push(note);
     }
     return acc;
-  }, [] as Item<"note">[]);
+  }, [] as ExtendedItem<"note">[]);
 });
 
 export const notesSlice = createSlice({

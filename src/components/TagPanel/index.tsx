@@ -4,7 +4,7 @@ import { addTag } from "@/redux/tags/tagsSlice";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { AssignTagDialog } from "../Dialogs/";
-import type { Item } from "../ListItem/types";
+import type { ExtendedItem } from "../ListItem/types";
 import TagBadge from "../TagBadge";
 import { Badge } from "../ui/badge";
 
@@ -74,7 +74,7 @@ export default function TagsPanel() {
 }
 
 type TagListProps = {
-  tags: (Item<"tag"> | undefined)[];
+  tags: (ExtendedItem<"tag"> | undefined)[];
   onTagClick: (tagId: string | undefined) => void;
   onTagDelete: (tagId: string | undefined) => void;
 };

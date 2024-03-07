@@ -1,8 +1,8 @@
 import { Ref, forwardRef, type ReactNode } from "react";
-import type { Item, ItemTypes } from "./types";
+import type { Item } from "./types";
 
 interface ListItemProps {
-  item: Item<keyof ItemTypes>;
+  item: Item;
   title: ReactNode;
   body?: ReactNode;
   footer?: ReactNode;

@@ -6,7 +6,7 @@ import { PiDotsThree } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { CreateFolderDialog, DeleteFolderDialog } from "./Dialogs/";
 import ListItem from "./ListItem";
-import type { Item } from "./ListItem/types";
+import type { ExtendedItem } from "./ListItem/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +17,7 @@ import {
 } from "./ui/dropdown-menu";
 
 type FolderItemProps = {
-  item: Item<"folder">;
+  item: ExtendedItem<"folder">;
 };
 
 export default function FolderItem(props: FolderItemProps) {

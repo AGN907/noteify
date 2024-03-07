@@ -3,14 +3,14 @@ import { selectNote } from "@/redux/notes/notesSlice";
 import { EditorContent, useEditor, type JSONContent } from "@tiptap/react";
 import { useRef } from "react";
 import { PiArrowLeft } from "react-icons/pi";
-import type { Item } from "../ListItem/types";
+import type { ExtendedItem } from "../ListItem/types";
 import TagsPanel from "../TagPanel";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import EditorToolbar, { extensions } from "./EditorToolbar";
 
 interface EditorProps {
-  note: Item<"note">;
+  note: ExtendedItem<"note">;
   onChange: ({
     title,
     content,

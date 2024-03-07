@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { assignNoteToFolder } from "@/redux/notes/notesSlice";
 import { SelectValue } from "@radix-ui/react-select";
 import { useState } from "react";
-import type { Item } from "../ListItem/types";
+import type { ExtendedItem } from "../ListItem/types";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 
 type AssignFolderDialogProps = {
   children?: React.ReactNode;
-  selectedNote: Item<"note">;
+  selectedNote: ExtendedItem<"note">;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 };

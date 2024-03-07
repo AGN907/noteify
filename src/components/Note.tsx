@@ -11,7 +11,7 @@ import { useState } from "react";
 import { PiDotsThree, PiPushPinSimple, PiStar } from "react-icons/pi";
 import { AssignFolderDialog } from "./Dialogs/";
 import ListItem from "./ListItem";
-import type { Item } from "./ListItem/types";
+import type { ExtendedItem } from "./ListItem/types";
 import { TimeAgo } from "./shared/TimeAgo";
 import {
   DropdownMenu,
@@ -24,7 +24,7 @@ import {
 } from "./ui/dropdown-menu";
 
 interface NoteProps {
-  item: Item<"note">;
+  item: ExtendedItem<"note">;
 }
 
 export default function Note(props: NoteProps) {
