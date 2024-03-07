@@ -15,7 +15,12 @@ const ListItemContainer = <T extends keyof ListTypes>({
   T extends keyof ListTypes ? ListTypes[T] : Item
 >) => {
   const Component = getListWrapper(type);
-  const sortedItems = items.slice().sort((a, b) => b.updatedAt - a.updatedAt);
+
+  const sortedItems = items
+    .slice()
+    .sort((a, b) => b.updatedAt - a.updatedAt)
+    //@ts-ignore
+    .filter((item) => !item.isPinned);
 
   const groupedByDate = sortedItems.reduce(
     (acc, item) => {
@@ -31,7 +36,7 @@ const ListItemContainer = <T extends keyof ListTypes>({
   );
 
   let pinnedItems: ListTypes["note"][] = [];
-  if (type === "note") {
+  if (type === "note" || type === "trash") {
     const noteItems = items as ListTypes["note"][];
     pinnedItems = noteItems.filter((item) => item.isPinned);
   }
