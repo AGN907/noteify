@@ -23,14 +23,14 @@ export default function TagsPanel() {
     .map((tag) => tags.find((t) => t.id === tag))
     .filter((tag) => tag !== undefined);
 
-  const handleTagCreate = (name: string, isNew: boolean = true) => {
+  const handleTagCreate = (title: string, isNew: boolean = true) => {
     let id;
 
     if (isNew) {
       id = uuid();
-      dispatch(addTag({ id, name }));
+      dispatch(addTag({ id, title }));
     } else {
-      id = name;
+      id = title;
     }
 
     handleTagAssign(id);
@@ -87,7 +87,7 @@ const TagList = ({ tags, onTagClick, onTagDelete }: TagListProps) => {
         <TagBadge
           key={tag?.id}
           tag={tag}
-          onTagClick={() => onTagClick(tag?.name)}
+          onTagClick={() => onTagClick(tag?.title)}
           onTagDelete={() => onTagDelete(tag?.id)}
         />
       );
