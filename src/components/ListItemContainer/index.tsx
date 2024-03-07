@@ -1,21 +1,20 @@
 import dayjs from "dayjs";
 import type { Item, ListTypes } from "../ListItem/types";
+import { getListWrapper } from "./listWrappers";
 
-// Todo: Use the `type` to infer the type of the items array and render a Component from an Object of Components instead of using a renderItem function
 type ListItemContainerProps<T, C> = {
   type: T;
   items: C[];
-  renderItem: (item: C) => JSX.Element;
 };
 
 const ListItemContainer = <T extends keyof ListTypes>({
   type,
   items,
-  renderItem,
 }: ListItemContainerProps<
   T,
   T extends keyof ListTypes ? ListTypes[T] : Item
 >) => {
+  const Component = getListWrapper(type);
   const sortedItems = items.slice().sort((a, b) => b.updatedAt - a.updatedAt);
 
   const groupedByDate = sortedItems.reduce(
@@ -31,12 +30,28 @@ const ListItemContainer = <T extends keyof ListTypes>({
     {} as { [date: string]: typeof items },
   );
 
+  let pinnedItems: ListTypes["note"][] = [];
+  if (type === "note") {
+    const noteItems = items as ListTypes["note"][];
+    pinnedItems = noteItems.filter((item) => item.isPinned);
+  }
+
   return (
     <ul className="h-screen overflow-y-auto pb-14">
+      {pinnedItems.length > 0 && (
+        <div>
+          <h2 className="px-1 pt-4 text-xl font-semibold">Pinned</h2>
+          {pinnedItems.map((item) => (
+            <Component key={item.id} item={item} />
+          ))}
+        </div>
+      )}
       {Object.entries(groupedByDate).map(([date, items]) => (
         <div key={date}>
           <h2 className="px-1 pt-4 text-xl font-semibold">{date}</h2>
-          {items.map(renderItem)}
+          {items.map((item) => (
+            <Component key={item.id} item={item} />
+          ))}
         </div>
       ))}
     </ul>

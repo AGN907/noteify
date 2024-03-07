@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import ListItemContainer from "@/components/ListItemContainer";
-import Note from "@/components/Note";
 import { Button } from "@/components/ui/button";
 import { createNote } from "@/redux/notes/notesSlice";
 import { PiPlusCircleFill } from "react-icons/pi";
@@ -36,11 +35,7 @@ function Notes() {
             </p>
           </div>
         )}
-        <ListItemContainer
-          type="note"
-          items={notesArray}
-          renderItem={(item) => <Note item={item} />}
-        />
+        <ListItemContainer type="note" items={notesArray} />
       </div>
     </div>
   );

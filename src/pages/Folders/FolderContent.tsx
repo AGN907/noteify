@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import ListItemContainer from "@/components/ListItemContainer";
-import Note from "@/components/Note";
 import { Button } from "@/components/ui/button";
 import { createNote } from "@/redux/notes/notesSlice";
 import { PiArrowLeft, PiFilePlus } from "react-icons/pi";
@@ -60,11 +59,7 @@ export default function FolderContent() {
           <p>No notes yet. Add notes to this folder to view them here.</p>
         </div>
       )}
-      <ListItemContainer
-        type="note"
-        items={folderNotes}
-        renderItem={(item) => <Note item={item} />}
-      />
+      <ListItemContainer type="note" items={folderNotes} />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { useAppSelector } from "@/app/hooks";
 import ListItemContainer from "@/components/ListItemContainer";
-import Note from "@/components/Note";
 
 export default function Trash() {
   const { notes } = useAppSelector((state) => state.notes);
@@ -19,11 +18,7 @@ export default function Trash() {
           </div>
         )}
 
-        <ListItemContainer
-          type="trash"
-          items={trashNotes}
-          renderItem={(item) => <Note item={item} />}
-        />
+        <ListItemContainer type="trash" items={trashNotes} />
       </div>
     </div>
   );
